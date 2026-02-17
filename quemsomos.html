@@ -1,0 +1,1085 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="CyTracks — Quem Somos. Consultoria especializada em segurança cibernética.">
+<title>CyTracks // Quem Somos</title>
+<link rel="icon" type="image/png" href="https://i.imgur.com/ISlc727.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@300;400;600;700;900&family=JetBrains+Mono:wght@300;400;500&display=swap" rel="stylesheet">
+<script src="https://unpkg.com/lucide@latest"></script>
+<style>
+/* ============================================================
+   TOKENS
+============================================================ */
+:root {
+  --void:    #06060a;
+  --deep:    #0c0c12;
+  --surface: #111118;
+  --panel:   #16161f;
+  --edge:    rgba(255,255,255,0.06);
+  --accent:  #7c3aed;
+  --neon:    #a855f7;
+  --plasma:  #c084fc;
+  --cyan:    #06b6d4;
+  --cyan-glow: rgba(6,182,212,0.25);
+  --muted:   #52526b;
+  --dim:     #8888a8;
+  --body:    #c8c8e0;
+  --bright:  #f0f0ff;
+  --mono:    'JetBrains Mono', monospace;
+  --display: 'Barlow Condensed', sans-serif;
+  --ease-out-expo: cubic-bezier(0.19,1,0.22,1);
+  --ease-in-out:   cubic-bezier(0.77,0,0.175,1);
+}
+
+/* ============================================================
+   RESET & BASE
+============================================================ */
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+body{
+  background:var(--void); color:var(--body);
+  font-family:var(--display); overflow-x:hidden;
+  min-height:100vh; cursor:none;
+}
+
+/* ============================================================
+   CURSOR
+============================================================ */
+.cursor{position:fixed;pointer-events:none;z-index:9999;mix-blend-mode:difference;}
+.cursor-dot {width:6px;height:6px;background:#fff;border-radius:50%;transform:translate(-50%,-50%);}
+.cursor-ring{
+  width:32px;height:32px;border:1px solid rgba(168,85,247,0.6);border-radius:50%;
+  transform:translate(-50%,-50%);
+  transition:width .3s var(--ease-out-expo),height .3s var(--ease-out-expo),border-color .3s;
+}
+body.cursor-hover .cursor-ring{width:52px;height:52px;border-color:var(--neon);}
+
+/* ============================================================
+   NOISE
+============================================================ */
+body::before{
+  content:'';position:fixed;inset:0;pointer-events:none;z-index:9990;opacity:.028;
+  background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  background-size:180px;
+}
+
+/* ============================================================
+   CANVAS BG
+============================================================ */
+#bg-canvas{position:fixed;inset:0;z-index:0;pointer-events:none;}
+
+/* ============================================================
+   HEADER
+============================================================ */
+header{
+  position:fixed;top:0;left:0;width:100%;z-index:1000;
+  padding:0 5%;height:72px;
+  display:flex;align-items:center;justify-content:space-between;
+  background:rgba(6,6,10,0.8);
+  backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);
+  border-bottom:1px solid var(--edge);
+  transition:background .5s,border-color .5s;
+}
+header::after{
+  content:'';position:absolute;bottom:-1px;left:-100%;
+  width:35%;height:1px;
+  background:linear-gradient(90deg,transparent,var(--neon),var(--plasma),transparent);
+  animation:h-scan 5s ease-in-out infinite 1s;pointer-events:none;
+}
+@keyframes h-scan{
+  0%{left:-35%;opacity:0;}5%{opacity:1;}95%{opacity:1;}100%{left:135%;opacity:0;}
+}
+.logo-wrap{display:flex;align-items:center;gap:.75rem;text-decoration:none;}
+.logo-wrap img{height:36px;display:block;}
+.logo-tag{
+  font-family:var(--mono);font-size:.6rem;color:var(--neon);
+  letter-spacing:2px;text-transform:uppercase;
+  padding:2px 6px;border:1px solid rgba(168,85,247,0.3);line-height:1.6;
+}
+.nav-primary{display:flex;align-items:center;gap:2.5rem;height:100%;list-style:none;}
+.nav-item{position:relative;height:100%;display:flex;align-items:center;}
+.nav-link{
+  font-family:var(--display);font-size:.72rem;font-weight:600;
+  letter-spacing:2.5px;text-transform:uppercase;
+  color:var(--muted);text-decoration:none;
+  padding:.4rem 0;position:relative;overflow:hidden;transition:color .2s;
+}
+.nav-link::after{
+  content:'';position:absolute;bottom:0;left:0;width:0;height:1px;
+  background:linear-gradient(90deg,var(--accent),var(--plasma));
+  box-shadow:0 0 8px var(--neon);transition:width .4s var(--ease-in-out);
+}
+.nav-link:hover,.nav-link.active{color:var(--bright);}
+.nav-link:hover::after,.nav-link.active::after{width:100%;}
+.has-drop{cursor:pointer;}
+.drop-label{
+  font-family:var(--display);font-size:.72rem;font-weight:600;
+  letter-spacing:2.5px;text-transform:uppercase;
+  color:var(--muted);display:flex;align-items:center;gap:.4rem;
+  transition:color .2s;position:relative;
+}
+.drop-label::after{
+  content:'';position:absolute;bottom:-4px;left:0;width:0;height:1px;
+  background:linear-gradient(90deg,var(--accent),var(--plasma));
+  box-shadow:0 0 8px var(--neon);transition:width .4s var(--ease-in-out);
+}
+.has-drop:hover .drop-label{color:var(--bright);}
+.has-drop:hover .drop-label::after{width:100%;}
+.drop-arrow{transition:transform .35s var(--ease-in-out);}
+.has-drop:hover .drop-arrow{transform:rotate(180deg);color:var(--neon);}
+.drop-panel{
+  position:absolute;top:calc(100% + 1px);left:-16px;
+  min-width:220px;background:rgba(12,12,18,0.98);
+  border:1px solid rgba(124,58,237,0.2);border-top:2px solid var(--accent);
+  padding:.5rem 0;opacity:0;visibility:hidden;transform:translateY(8px);
+  transition:all .3s var(--ease-out-expo);
+  clip-path:polygon(0 0,calc(100% - 12px) 0,100% 12px,100% 100%,12px 100%,0 calc(100% - 12px));
+  box-shadow:0 20px 60px rgba(0,0,0,.6),0 0 40px rgba(124,58,237,.08);
+}
+.has-drop:hover .drop-panel{opacity:1;visibility:visible;transform:translateY(0);}
+.drop-item{
+  display:flex;align-items:center;gap:.6rem;
+  padding:.65rem 1.2rem;color:var(--dim);text-decoration:none;
+  font-size:.72rem;font-weight:600;letter-spacing:1.8px;text-transform:uppercase;
+  transition:color .2s,padding-left .2s;position:relative;
+}
+.drop-item::before{
+  content:'//';font-family:var(--mono);font-size:.6rem;color:var(--neon);
+  opacity:0;transform:translateX(-8px);transition:opacity .2s,transform .2s;
+}
+.drop-item:hover{color:var(--bright);padding-left:1.6rem;}
+.drop-item:hover::before{opacity:1;transform:translateX(0);}
+
+/* ============================================================
+   PAGE HERO — statement de missão
+============================================================ */
+.page-hero{
+  position:relative;z-index:10;
+  min-height:100svh;
+  display:flex;flex-direction:column;justify-content:center;
+  padding:0 5%;padding-top:72px;
+  overflow:hidden;
+}
+
+/* Grade de fundo */
+.page-hero::before{
+  content:'';position:absolute;inset:0;pointer-events:none;
+  background-image:
+    linear-gradient(rgba(124,58,237,.035) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(124,58,237,.035) 1px,transparent 1px);
+  background-size:80px 80px;
+  mask-image:radial-gradient(ellipse 90% 90% at 50% 50%,black 20%,transparent 100%);
+}
+
+/* Linha vertical decorativa */
+.page-hero::after{
+  content:'';position:absolute;left:5%;top:72px;bottom:0;
+  width:1px;
+  background:linear-gradient(to bottom,transparent,rgba(168,85,247,.3) 20%,rgba(168,85,247,.3) 80%,transparent);
+  pointer-events:none;
+}
+
+.hero-inner{
+  max-width:900px;
+  padding-left:3rem; /* respira da linha vertical */
+}
+
+.page-eyebrow{
+  display:inline-flex;align-items:center;gap:.75rem;
+  font-family:var(--mono);font-size:.65rem;letter-spacing:3px;
+  color:var(--cyan);text-transform:uppercase;margin-bottom:2rem;
+  opacity:0;transform:translateY(14px);
+  animation:fade-up .8s var(--ease-out-expo) .3s forwards;
+}
+.eyebrow-line{width:32px;height:1px;background:linear-gradient(90deg,var(--cyan),transparent);}
+
+.page-title{
+  font-family:var(--display);font-weight:900;
+  font-size:clamp(3.5rem,8vw,8rem);line-height:.9;
+  letter-spacing:-2px;text-transform:uppercase;color:var(--bright);
+  margin-bottom:2.5rem;
+  opacity:0;transform:translateY(28px);
+  animation:fade-up .9s var(--ease-out-expo) .5s forwards;
+}
+.page-title .outline{color:transparent;-webkit-text-stroke:2px var(--neon);}
+.page-title .cyan{color:var(--cyan);}
+
+.page-statement{
+  font-family:var(--mono);font-size:.95rem;font-weight:300;
+  line-height:2;color:var(--dim);max-width:580px;letter-spacing:.3px;
+  border-left:2px solid rgba(168,85,247,.3);padding-left:1.5rem;
+  opacity:0;transform:translateY(14px);
+  animation:fade-up .8s var(--ease-out-expo) .8s forwards;
+}
+.page-statement strong{color:var(--bright);font-weight:400;}
+
+/* Scroll hint */
+.scroll-hint{
+  position:absolute;bottom:2.5rem;left:5%;padding-left:3rem;
+  display:flex;align-items:center;gap:.75rem;
+  font-family:var(--mono);font-size:.58rem;letter-spacing:2.5px;
+  color:var(--muted);text-transform:uppercase;
+  opacity:0;animation:fade-up .8s var(--ease-out-expo) 1.2s forwards;
+}
+.scroll-line{
+  width:1px;height:36px;
+  background:linear-gradient(to bottom,var(--neon),transparent);
+  animation:scroll-pulse 2s ease-in-out infinite;
+}
+@keyframes scroll-pulse{0%,100%{opacity:.4;}50%{opacity:1;}}
+@keyframes fade-up{to{opacity:1;transform:translateY(0);}}
+
+/* ============================================================
+   NÚMEROS — impacto rápido
+============================================================ */
+.numbers-section{
+  position:relative;z-index:10;
+  display:grid;grid-template-columns:repeat(4,1fr);
+  border-top:1px solid var(--edge);
+  border-bottom:1px solid var(--edge);
+}
+.number-item{
+  padding:3rem 2rem;
+  border-right:1px solid var(--edge);
+  display:flex;flex-direction:column;gap:.5rem;
+  position:relative;overflow:hidden;
+  transition:background .3s;
+}
+.number-item:last-child{border-right:none;}
+.number-item::after{
+  content:'';position:absolute;bottom:0;left:0;width:0;height:2px;
+  background:linear-gradient(90deg,var(--accent),var(--cyan));
+  transition:width .6s var(--ease-out-expo);
+}
+.number-item:hover{background:var(--surface);}
+.number-item:hover::after{width:100%;}
+.number-val{
+  font-family:var(--display);font-size:3.5rem;font-weight:900;
+  line-height:1;letter-spacing:-2px;color:var(--bright);
+}
+.number-val .unit{font-size:2rem;color:var(--neon);}
+.number-val .cyan-unit{font-size:2rem;color:var(--cyan);}
+.number-label{
+  font-family:var(--mono);font-size:.62rem;
+  letter-spacing:2px;color:var(--muted);text-transform:uppercase;
+}
+.number-desc{
+  font-family:var(--mono);font-size:.7rem;
+  line-height:1.7;color:var(--dim);margin-top:.25rem;
+  letter-spacing:.2px;
+}
+
+/* ============================================================
+   HISTÓRIA / TIMELINE
+============================================================ */
+.history-section{
+  position:relative;z-index:10;
+  padding:8rem 5%;
+  border-bottom:1px solid var(--edge);
+}
+.section-label{
+  font-family:var(--mono);font-size:.6rem;letter-spacing:3px;
+  color:var(--muted);text-transform:uppercase;margin-bottom:3rem;
+  display:flex;align-items:center;gap:.75rem;
+}
+.section-label::before{
+  content:'';display:inline-block;width:24px;height:1px;background:var(--neon);
+}
+
+.history-grid{
+  display:grid;grid-template-columns:1fr 1fr;
+  gap:6rem;align-items:start;
+}
+
+.history-text h2{
+  font-family:var(--display);font-size:clamp(2.5rem,4vw,4rem);
+  font-weight:900;text-transform:uppercase;line-height:.95;
+  letter-spacing:-1px;color:var(--bright);margin-bottom:2rem;
+}
+.history-text h2 .accent{color:var(--neon);}
+.history-text p{
+  font-family:var(--mono);font-size:.8rem;line-height:2.1;
+  color:var(--dim);letter-spacing:.3px;margin-bottom:1.2rem;
+}
+
+/* Timeline */
+.timeline{display:flex;flex-direction:column;gap:0;}
+.tl-item{
+  display:grid;grid-template-columns:80px 1fr;
+  gap:1.5rem;padding:1.5rem 0;
+  border-bottom:1px solid var(--edge);
+  position:relative;
+}
+.tl-item:last-child{border-bottom:none;}
+.tl-item::before{
+  content:'';position:absolute;left:38px;top:0;bottom:0;
+  width:1px;background:var(--edge);z-index:0;
+}
+.tl-year{
+  font-family:var(--display);font-size:1.1rem;font-weight:700;
+  color:var(--neon);letter-spacing:1px;padding-top:.15rem;
+  position:relative;z-index:1;
+}
+.tl-dot{
+  position:absolute;left:32px;top:1.8rem;
+  width:13px;height:13px;border-radius:50%;
+  background:var(--void);border:2px solid var(--neon);
+  box-shadow:0 0 10px rgba(168,85,247,.5);z-index:2;
+}
+.tl-item:nth-child(even) .tl-dot{border-color:var(--cyan);box-shadow:0 0 10px rgba(6,182,212,.5);}
+.tl-item:nth-child(even) .tl-year{color:var(--cyan);}
+.tl-content{padding-left:1rem;}
+.tl-title{
+  font-family:var(--display);font-size:1rem;font-weight:700;
+  text-transform:uppercase;letter-spacing:1px;color:var(--bright);
+  margin-bottom:.4rem;
+}
+.tl-body{
+  font-family:var(--mono);font-size:.7rem;line-height:1.9;
+  color:var(--dim);letter-spacing:.2px;
+}
+
+/* ============================================================
+   VALORES — o que nos guia
+============================================================ */
+.values-section{
+  position:relative;z-index:10;
+  padding:8rem 5%;
+  border-bottom:1px solid var(--edge);
+}
+.values-header{
+  display:grid;grid-template-columns:1fr 1fr;
+  gap:4rem;align-items:end;margin-bottom:5rem;
+}
+.values-header h2{
+  font-family:var(--display);font-size:clamp(2.5rem,4vw,4.5rem);
+  font-weight:900;text-transform:uppercase;line-height:.95;
+  letter-spacing:-1px;color:var(--bright);
+}
+.values-header h2 .accent{color:var(--neon);}
+.values-header p{
+  font-family:var(--mono);font-size:.78rem;line-height:2;
+  color:var(--dim);letter-spacing:.3px;
+}
+
+.values-grid{
+  display:grid;grid-template-columns:repeat(3,1fr);
+  gap:1px;background:var(--edge);
+}
+.value-card{
+  background:var(--void);padding:2.5rem 2rem;
+  display:flex;flex-direction:column;gap:1rem;
+  position:relative;overflow:hidden;transition:background .3s;
+}
+.value-card::before{
+  content:'';position:absolute;top:0;left:0;right:0;height:2px;
+  background:linear-gradient(90deg,var(--accent),var(--plasma));
+  transform:scaleX(0);transform-origin:left;
+  transition:transform .5s var(--ease-out-expo);
+}
+.value-card:hover{background:var(--surface);}
+.value-card:hover::before{transform:scaleX(1);}
+
+.value-card:nth-child(3n+2)::before{background:linear-gradient(90deg,var(--cyan),var(--plasma));}
+.value-card:nth-child(3n+3)::before{background:linear-gradient(90deg,var(--plasma),var(--neon));}
+
+.value-num{
+  font-family:var(--mono);font-size:.58rem;
+  color:var(--muted);letter-spacing:2px;
+}
+.value-icon{color:var(--neon);margin-bottom:.25rem;}
+.value-card:nth-child(even) .value-icon{color:var(--cyan);}
+.value-title{
+  font-family:var(--display);font-size:1.5rem;font-weight:700;
+  text-transform:uppercase;letter-spacing:.5px;color:var(--bright);line-height:1;
+}
+.value-body{
+  font-family:var(--mono);font-size:.7rem;line-height:1.9;
+  color:var(--muted);letter-spacing:.2px;
+}
+
+/* ============================================================
+   ABORDAGEM — como trabalhamos
+============================================================ */
+.approach-section{
+  position:relative;z-index:10;
+  padding:8rem 5%;
+  border-bottom:1px solid var(--edge);
+  display:grid;grid-template-columns:1fr 1fr;
+  gap:6rem;align-items:center;
+}
+
+.approach-visual{
+  position:relative;height:420px;
+}
+/* Diagrama de "camadas de defesa" em CSS puro */
+.defense-layers{
+  position:absolute;inset:0;
+  display:flex;align-items:center;justify-content:center;
+}
+.layer{
+  position:absolute;border-radius:50%;
+  border:1px solid;
+  display:flex;align-items:center;justify-content:center;
+  animation:layer-rotate linear infinite;
+}
+.layer-1{
+  width:340px;height:340px;
+  border-color:rgba(124,58,237,.12);
+  animation-duration:60s;
+}
+.layer-2{
+  width:260px;height:260px;
+  border-color:rgba(168,85,247,.18);
+  animation-duration:45s;animation-direction:reverse;
+}
+.layer-3{
+  width:180px;height:180px;
+  border-color:rgba(6,182,212,.22);
+  animation-duration:30s;
+}
+.layer-4{
+  width:100px;height:100px;
+  border-color:rgba(192,132,252,.35);
+  animation-duration:20s;animation-direction:reverse;
+}
+@keyframes layer-rotate{to{transform:rotate(360deg);}}
+
+/* Ponto na borda de cada camada */
+.layer::before{
+  content:'';position:absolute;top:-4px;left:50%;transform:translateX(-50%);
+  width:7px;height:7px;border-radius:50%;background:var(--neon);
+  box-shadow:0 0 10px var(--neon),0 0 20px rgba(168,85,247,.4);
+}
+.layer-2::before{background:var(--plasma);}
+.layer-3::before{background:var(--cyan);box-shadow:0 0 10px var(--cyan);}
+.layer-4::before{background:var(--neon);}
+
+/* Label no centro */
+.layer-center{
+  position:absolute;display:flex;flex-direction:column;align-items:center;gap:.3rem;
+  z-index:10;
+}
+.layer-center-icon{color:var(--neon);filter:drop-shadow(0 0 8px rgba(168,85,247,.6));}
+.layer-center-label{
+  font-family:var(--mono);font-size:.6rem;letter-spacing:2px;
+  color:var(--neon);text-transform:uppercase;
+}
+
+/* Labels das camadas */
+.layer-labels{
+  position:absolute;inset:0;pointer-events:none;
+}
+.layer-tag{
+  position:absolute;
+  font-family:var(--mono);font-size:.6rem;letter-spacing:1.5px;
+  color:var(--dim);text-transform:uppercase;white-space:nowrap;
+  display:flex;align-items:center;gap:.4rem;
+}
+.layer-tag::before{content:'';width:12px;height:1px;background:var(--muted);}
+.lt-1{top:10px;right:24px;}
+.lt-2{top:42px;right:10px;}
+.lt-3{top:76px;right:26px;}
+.lt-4{top:110px;right:52px;}
+
+/* Texto lateral */
+.approach-text h2{
+  font-family:var(--display);font-size:clamp(2.5rem,4vw,4rem);
+  font-weight:900;text-transform:uppercase;line-height:.95;
+  letter-spacing:-1px;color:var(--bright);margin-bottom:1.5rem;
+}
+.approach-text h2 .accent{color:var(--cyan);}
+.approach-steps{display:flex;flex-direction:column;gap:1px;margin-top:2rem;}
+.step{
+  display:flex;gap:1.5rem;padding:1.2rem 0;
+  border-bottom:1px solid var(--edge);align-items:flex-start;
+}
+.step:last-child{border-bottom:none;}
+.step-num{
+  font-family:var(--mono);font-size:.58rem;color:var(--cyan);
+  letter-spacing:2px;padding-top:.2rem;flex-shrink:0;min-width:28px;
+}
+.step-title{
+  font-family:var(--display);font-size:1.1rem;font-weight:700;
+  text-transform:uppercase;letter-spacing:.5px;color:var(--bright);margin-bottom:.3rem;
+}
+.step-body{
+  font-family:var(--mono);font-size:.68rem;line-height:1.8;
+  color:var(--dim);letter-spacing:.2px;
+}
+
+/* ============================================================
+   CTA FINAL
+============================================================ */
+.cta-section{
+  position:relative;z-index:10;
+  padding:8rem 5%;
+  display:flex;flex-direction:column;align-items:center;text-align:center;gap:2rem;
+}
+.cta-eyebrow{
+  font-family:var(--mono);font-size:.62rem;letter-spacing:3px;
+  color:var(--muted);text-transform:uppercase;
+  display:flex;align-items:center;gap:.75rem;
+}
+.cta-eyebrow::before,.cta-eyebrow::after{
+  content:'';width:24px;height:1px;background:var(--edge);
+}
+.cta-title{
+  font-family:var(--display);font-size:clamp(3rem,6vw,6rem);
+  font-weight:900;text-transform:uppercase;line-height:.95;
+  letter-spacing:-2px;color:var(--bright);
+}
+.cta-title .outline{color:transparent;-webkit-text-stroke:2px var(--neon);}
+.cta-sub{
+  font-family:var(--mono);font-size:.8rem;line-height:2;
+  color:var(--dim);max-width:480px;
+}
+.cta-btns{display:flex;gap:1.2rem;flex-wrap:wrap;justify-content:center;}
+
+/* Botões */
+.btn-primary{
+  display:inline-flex;align-items:center;gap:.6rem;
+  padding:.75rem 1.75rem;background:var(--accent);color:#fff;
+  font-family:var(--display);font-size:.75rem;font-weight:700;
+  letter-spacing:2.5px;text-transform:uppercase;text-decoration:none;
+  cursor:none;position:relative;overflow:hidden;
+  clip-path:polygon(0 0,calc(100% - 10px) 0,100% 10px,100% 100%,10px 100%,0 calc(100% - 10px));
+  transition:background .3s,box-shadow .3s;
+}
+.btn-primary::before{
+  content:'';position:absolute;inset:0;
+  background:linear-gradient(135deg,rgba(255,255,255,.15),transparent);
+  opacity:0;transition:opacity .3s;
+}
+.btn-primary:hover{background:var(--neon);box-shadow:0 0 30px rgba(168,85,247,.4);}
+.btn-primary:hover::before{opacity:1;}
+.btn-ghost{
+  display:inline-flex;align-items:center;gap:.5rem;
+  padding:.75rem 1.75rem;background:transparent;color:var(--dim);
+  font-family:var(--display);font-size:.75rem;font-weight:700;
+  letter-spacing:2.5px;text-transform:uppercase;text-decoration:none;
+  border:1px solid var(--edge);cursor:none;transition:color .3s,border-color .3s;
+}
+.btn-ghost:hover{color:var(--cyan);border-color:rgba(6,182,212,.5);box-shadow:0 0 20px var(--cyan-glow);}
+
+/* ============================================================
+   FOOTER
+============================================================ */
+footer{position:relative;z-index:10;border-top:1px solid var(--edge);}
+.footer-ticker{
+  padding:.75rem 5%;border-bottom:1px solid var(--edge);
+  overflow:hidden;white-space:nowrap;background:var(--surface);
+}
+.ticker-inner{
+  display:inline-block;animation:ticker 30s linear infinite;
+  font-family:var(--mono);font-size:.62rem;letter-spacing:2.5px;
+  color:rgba(124,58,237,.4);text-transform:uppercase;
+}
+@keyframes ticker{0%{transform:translateX(0);}100%{transform:translateX(-50%);}}
+.footer-main{
+  padding:3rem 5%;
+  display:grid;grid-template-columns:1fr auto 1fr;
+  align-items:center;gap:2rem;
+}
+.footer-brand{display:flex;flex-direction:column;gap:.6rem;}
+.footer-copy{font-family:var(--mono);font-size:.62rem;letter-spacing:1px;color:var(--muted);}
+.footer-center{display:flex;flex-direction:column;align-items:center;gap:.5rem;}
+.footer-tagline{
+  font-family:var(--mono);font-size:.6rem;letter-spacing:3px;
+  color:rgba(6,182,212,.45);text-transform:uppercase;
+}
+.footer-slash{
+  font-family:var(--display);font-size:1.4rem;font-weight:900;
+  color:rgba(6,182,212,.2);letter-spacing:-1px;
+}
+.footer-links{display:flex;justify-content:flex-end;align-items:center;gap:2rem;list-style:none;}
+.footer-links a{
+  font-family:var(--mono);font-size:.65rem;letter-spacing:1.5px;
+  color:var(--muted);text-decoration:none;text-transform:uppercase;
+  display:flex;align-items:center;gap:.4rem;transition:color .25s;position:relative;
+}
+.footer-links a::after{
+  content:'';position:absolute;bottom:-2px;left:0;width:0;height:1px;
+  background:var(--neon);box-shadow:0 0 6px var(--neon);
+  transition:width .3s var(--ease-in-out);
+}
+.footer-links a:hover{color:var(--bright);}
+.footer-links a:hover::after{width:100%;}
+
+/* ============================================================
+   REVEAL
+============================================================ */
+.reveal      {opacity:0;transform:translateY(28px); transition:opacity .9s var(--ease-out-expo),transform .9s var(--ease-out-expo);}
+.reveal-left {opacity:0;transform:translateX(-32px);transition:opacity .9s var(--ease-out-expo),transform .9s var(--ease-out-expo);}
+.reveal-right{opacity:0;transform:translateX(32px); transition:opacity .9s var(--ease-out-expo),transform .9s var(--ease-out-expo);}
+.reveal.active,.reveal-left.active,.reveal-right.active{opacity:1;transform:none;}
+
+/* ============================================================
+   RESPONSIVE
+============================================================ */
+@media(max-width:900px){
+  .numbers-section{grid-template-columns:repeat(2,1fr);}
+  .history-grid,.values-header,.approach-section{grid-template-columns:1fr;gap:3rem;}
+  .values-grid{grid-template-columns:1fr;}
+  .approach-visual{height:320px;}
+  .footer-main{grid-template-columns:1fr;text-align:center;}
+  .footer-links{justify-content:center;}
+  .footer-center{display:none;}
+}
+@media(max-width:600px){
+  header{padding:0 4%;}
+  .page-hero{padding-left:4%;padding-right:4%;}
+  .page-title{font-size:3rem;}
+  .nav-primary{gap:1.2rem;}
+  .history-section,.values-section,.approach-section,.cta-section{padding-left:4%;padding-right:4%;}
+}
+</style>
+</head>
+<body>
+
+<div class="cursor" id="cursor">
+  <div class="cursor-ring" id="cursorRing"></div>
+  <div class="cursor-dot"  id="cursorDot"></div>
+</div>
+
+<canvas id="bg-canvas"></canvas>
+
+<!-- ====== HEADER ====== -->
+<header>
+  <a href="index.html" class="logo-wrap" aria-label="CyTracks — Início">
+    <img src="https://i.imgur.com/VC5Re3G.png" alt="CyTracks" id="mainLogo">
+    <span class="logo-tag">v2.6</span>
+  </a>
+  <nav aria-label="Navegação principal">
+    <ul class="nav-primary">
+      <li class="nav-item"><a href="index.html" class="nav-link"><span>Início</span></a></li>
+      <li class="nav-item"><a href="quemsomos.html" class="nav-link active" aria-current="page"><span>Quem Somos</span></a></li>
+      <li class="nav-item has-drop">
+        <span class="drop-label">
+          <span>Parceiros</span>
+          <i data-lucide="chevron-down" width="14" height="14" class="drop-arrow" aria-hidden="true"></i>
+        </span>
+        <div class="drop-panel">
+          <a href="abnormal.html"  class="drop-item">Abnormal IA</a>
+          <a href="semperis.html"  class="drop-item">Semperis</a>
+          <a href="safetica.html"  class="drop-item">Safetica</a>
+        </div>
+      </li>
+      <li class="nav-item"><a href="servicos.html" class="nav-link"><span>Serviços</span></a></li>
+      <li class="nav-item"><a href="contato.html"  class="nav-link"><span>Contato</span></a></li>
+    </ul>
+  </nav>
+</header>
+
+<!-- ====== PAGE HERO ====== -->
+<section class="page-hero" aria-label="Quem Somos">
+  <div class="hero-inner">
+    <div class="page-eyebrow">
+      <span class="eyebrow-line"></span>
+      <span>// 01 — Identidade</span>
+    </div>
+
+    <h1 class="page-title">
+      Quem<br>
+      <span class="outline">Somos</span><br>
+      <span class="cyan">Nós</span>
+    </h1>
+
+    <p class="page-statement">
+      Somos uma consultoria especializada em <strong>segurança cibernética</strong>,
+      fundada com um propósito claro: entregar proteção real, não promessas.<br><br>
+      Combinamos <strong>arquitetura estratégica</strong>, tecnologias de ponta
+      e uma abordagem profundamente consultiva para elevar a maturidade
+      de segurança das organizações que confiam em nós.
+    </p>
+  </div>
+
+  <div class="scroll-hint">
+    <div class="scroll-line"></div>
+    <span>Conhecer nossa história</span>
+  </div>
+</section>
+
+<!-- ====== NÚMEROS ====== -->
+<div class="numbers-section" aria-label="Números">
+  <div class="number-item reveal" style="transition-delay:.05s">
+    <div class="number-val">2019<span class="unit" style="font-size:1.2rem;color:var(--dim)"> </span></div>
+    <div class="number-label">Ano de fundação</div>
+    <div class="number-desc">Nascemos com foco em consultoria estratégica de segurança</div>
+  </div>
+  <div class="number-item reveal" style="transition-delay:.1s">
+    <div class="number-val">3<span class="cyan-unit">+</span></div>
+    <div class="number-label">Parceiros estratégicos</div>
+    <div class="number-desc">Tecnologias líderes de mercado curadas com critério</div>
+  </div>
+  <div class="number-item reveal" style="transition-delay:.15s">
+    <div class="number-val">100<span class="unit">%</span></div>
+    <div class="number-label">Foco em cyber</div>
+    <div class="number-desc">Especialização pura, sem dispersão em outras áreas de TI</div>
+  </div>
+  <div class="number-item reveal" style="transition-delay:.2s">
+    <div class="number-val">Zero<span class="cyan-unit"> </span></div>
+    <div class="number-label">Tolerância a risco</div>
+    <div class="number-desc">Cada projeto tratado com rigor de missão crítica</div>
+  </div>
+</div>
+
+<!-- ====== HISTÓRIA ====== -->
+<section class="history-section" aria-label="Nossa História">
+  <div class="section-label reveal">02 — Nossa Trajetória</div>
+
+  <div class="history-grid">
+    <div class="reveal-left">
+      <h2>Uma empresa<br>construída sobre<br><span class="accent">experiência real</span></h2>
+      <p>
+        A CyTracks nasceu da convicção de que segurança cibernética exige
+        especialização genuína — não generalistas disfarçados de experts.
+      </p>
+      <p>
+        Desde o início, apostamos em parcerias tecnológicas criteriosamente
+        selecionadas e em uma metodologia consultiva que coloca o contexto
+        do cliente no centro de cada decisão.
+      </p>
+      <p>
+        Cada ano reforçou essa convicção: empresas que tratam segurança
+        como estratégia, e não como custo, estão mais preparadas para o
+        cenário de ameaças atual.
+      </p>
+    </div>
+
+    <div class="reveal-right">
+      <div class="timeline">
+        <div class="tl-item">
+          <div class="tl-dot"></div>
+          <div class="tl-year">2019</div>
+          <div class="tl-content">
+            <div class="tl-title">Fundação</div>
+            <div class="tl-body">CyTracks é fundada com missão clara: consultoria especializada em segurança cibernética para empresas que não podem se dar ao luxo de errar.</div>
+          </div>
+        </div>
+        <div class="tl-item">
+          <div class="tl-dot"></div>
+          <div class="tl-year">2020</div>
+          <div class="tl-content">
+            <div class="tl-title">Primeiras Parcerias</div>
+            <div class="tl-body">Início das parcerias tecnológicas estratégicas. Curadoria rigorosa de ferramentas que realmente entregam resultado.</div>
+          </div>
+        </div>
+        <div class="tl-item">
+          <div class="tl-dot"></div>
+          <div class="tl-year">2022</div>
+          <div class="tl-content">
+            <div class="tl-title">Metodologia Zero Trust</div>
+            <div class="tl-body">Consolidação da abordagem arquitetural Zero Trust como padrão em todos os projetos de implementação.</div>
+          </div>
+        </div>
+        <div class="tl-item">
+          <div class="tl-dot"></div>
+          <div class="tl-year">2024</div>
+          <div class="tl-content">
+            <div class="tl-title">IA no Portfólio</div>
+            <div class="tl-body">Integração de soluções baseadas em inteligência artificial ao portfólio, antecipando o novo vetor de ameaças e defesas.</div>
+          </div>
+        </div>
+        <div class="tl-item">
+          <div class="tl-dot"></div>
+          <div class="tl-year">2026</div>
+          <div class="tl-content">
+            <div class="tl-title">Hoje</div>
+            <div class="tl-body">Consultoria consolidada, portfólio maduro, e o mesmo compromisso de 2019: proteger o que importa para cada cliente.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ====== VALORES ====== -->
+<section class="values-section" aria-label="Nossos Valores">
+  <div class="section-label reveal">03 — O que nos guia</div>
+
+  <div class="values-header">
+    <h2 class="reveal-left">Princípios que<br>não têm<br><span class="accent">exceção</span></h2>
+    <p class="reveal-right">
+      Valores não são decoração de site. São as decisões que tomamos
+      quando é difícil, quando custa caro, quando seria mais fácil
+      fazer diferente. Esses são os nossos.
+    </p>
+  </div>
+
+  <div class="values-grid">
+    <div class="value-card reveal" style="transition-delay:.05s">
+      <div class="value-num">01</div>
+      <i data-lucide="eye" width="22" height="22" class="value-icon"></i>
+      <div class="value-title">Honestidade Técnica</div>
+      <div class="value-body">Dizemos o que encontramos, não o que o cliente quer ouvir. Diagnósticos reais, sem suavização de vulnerabilidades.</div>
+    </div>
+    <div class="value-card reveal" style="transition-delay:.1s">
+      <div class="value-num">02</div>
+      <i data-lucide="focus" width="22" height="22" class="value-icon"></i>
+      <div class="value-title">Especialização Pura</div>
+      <div class="value-body">Fazemos apenas segurança cibernética. Profundidade e não amplitude. Expertise real, não consultoria genérica com slide de cyber.</div>
+    </div>
+    <div class="value-card reveal" style="transition-delay:.15s">
+      <div class="value-num">03</div>
+      <i data-lucide="handshake" width="22" height="22" class="value-icon"></i>
+      <div class="value-title">Parceria de Verdade</div>
+      <div class="value-body">Cada cliente é tratado como parceiro de longo prazo. Não vendemos produtos — construímos postura de segurança.</div>
+    </div>
+    <div class="value-card reveal" style="transition-delay:.2s">
+      <div class="value-num">04</div>
+      <i data-lucide="zap" width="22" height="22" class="value-icon"></i>
+      <div class="value-title">Resultado Mensurável</div>
+      <div class="value-body">Cada implementação tem critério de sucesso definido antes de começar. Maturidade que se prova, não que se declara.</div>
+    </div>
+    <div class="value-card reveal" style="transition-delay:.25s">
+      <div class="value-num">05</div>
+      <i data-lucide="refresh-cw" width="22" height="22" class="value-icon"></i>
+      <div class="value-title">Atualização Contínua</div>
+      <div class="value-body">O adversário evolui todos os dias. Nosso portfólio, metodologia e conhecimento também. Não existe acomodação.</div>
+    </div>
+    <div class="value-card reveal" style="transition-delay:.3s">
+      <div class="value-num">06</div>
+      <i data-lucide="shield-check" width="22" height="22" class="value-icon"></i>
+      <div class="value-title">Responsabilidade Total</div>
+      <div class="value-body">Assumimos o projeto como se fosse nosso. Quando algo não funciona, resolvemos. Sem transferência de culpa, sem excuses.</div>
+    </div>
+  </div>
+</section>
+
+<!-- ====== ABORDAGEM ====== -->
+<section class="approach-section" aria-label="Como trabalhamos">
+
+  <div class="approach-visual reveal-left">
+    <div class="defense-layers">
+      <div class="layer layer-1"></div>
+      <div class="layer layer-2"></div>
+      <div class="layer layer-3"></div>
+      <div class="layer layer-4"></div>
+      <div class="layer-center">
+        <i data-lucide="shield" width="28" height="28" class="layer-center-icon"></i>
+        <span class="layer-center-label">Core</span>
+      </div>
+    </div>
+    <div class="layer-labels">
+      <div class="layer-tag lt-1">Perímetro</div>
+      <div class="layer-tag lt-2">Identidade</div>
+      <div class="layer-tag lt-3">Dados</div>
+      <div class="layer-tag lt-4">Aplicação</div>
+    </div>
+  </div>
+
+  <div class="approach-text reveal-right">
+    <div class="section-label" style="margin-bottom:1.5rem">04 — Como trabalhamos</div>
+    <h2>Defesa em<br><span class="accent">Profundidade</span></h2>
+    <div class="approach-steps">
+      <div class="step">
+        <span class="step-num">01</span>
+        <div>
+          <div class="step-title">Avaliar</div>
+          <div class="step-body">Mapeamos sua superfície de ataque com profundidade. Identificamos o que está exposto, o que está mal configurado, o que é realmente crítico.</div>
+        </div>
+      </div>
+      <div class="step">
+        <span class="step-num">02</span>
+        <div>
+          <div class="step-title">Projetar</div>
+          <div class="step-body">Desenhamos uma arquitetura de segurança sob medida. Zero Trust, defesa em camadas, controles alinhados ao seu negócio.</div>
+        </div>
+      </div>
+      <div class="step">
+        <span class="step-num">03</span>
+        <div>
+          <div class="step-title">Implementar</div>
+          <div class="step-body">Integramos as tecnologias certas ao seu ambiente. Sem over-engineering, sem vendor lock-in desnecessário.</div>
+        </div>
+      </div>
+      <div class="step">
+        <span class="step-num">04</span>
+        <div>
+          <div class="step-title">Capacitar</div>
+          <div class="step-body">Transferimos conhecimento para seu time. Segurança sustentável começa com as pessoas que vivem dentro do ambiente.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ====== CTA ====== -->
+<section class="cta-section reveal" aria-label="Fale Conosco">
+  <div class="cta-eyebrow">Próximo Passo</div>
+  <h2 class="cta-title">
+    Vamos<br>
+    <span class="outline">Conversar</span>?
+  </h2>
+  <p class="cta-sub">
+    Conte-nos sobre seu ambiente e seus desafios.
+    A primeira conversa é sem compromisso — e costuma ser reveladora.
+  </p>
+  <div class="cta-btns">
+    <a href="contato.html" class="btn-primary">
+      <i data-lucide="arrow-right" width="15" height="15"></i>
+      Falar com Especialista
+    </a>
+    <a href="servicos.html" class="btn-ghost">
+      <i data-lucide="layers" width="15" height="15"></i>
+      Ver Serviços
+    </a>
+  </div>
+</section>
+
+<!-- ====== FOOTER ====== -->
+<footer>
+  <div class="footer-ticker" aria-hidden="true">
+    <span class="ticker-inner" id="tickerInner"></span>
+  </div>
+  <div class="footer-main">
+    <div class="footer-brand">
+      <p class="footer-copy">&copy; 2026 CyTracks Soluções Cibernéticas.<br>Todos os direitos reservados.</p>
+    </div>
+    <div class="footer-center">
+      <div class="footer-slash">CY//</div>
+      <span class="footer-tagline">Inteligência. Proteção. Resultado.</span>
+    </div>
+    <ul class="footer-links">
+      <li><a href="privacidade.html">Aviso de Privacidade</a></li>
+      <li>
+        <a href="https://www.linkedin.com/company/cytracks" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn">
+          <i data-lucide="linkedin" width="14" height="14"></i>LinkedIn
+        </a>
+      </li>
+    </ul>
+  </div>
+</footer>
+
+<script>
+lucide.createIcons();
+
+/* ── CURSOR ── */
+const cursorDot  = document.getElementById('cursorDot');
+const cursorRing = document.getElementById('cursorRing');
+let mx=0,my=0,rx=0,ry=0;
+document.addEventListener('mousemove',e=>{mx=e.clientX;my=e.clientY;});
+document.querySelectorAll('a,button,[role=button],.value-card,.number-item,.has-drop').forEach(el=>{
+  el.addEventListener('mouseenter',()=>document.body.classList.add('cursor-hover'));
+  el.addEventListener('mouseleave',()=>document.body.classList.remove('cursor-hover'));
+});
+(function animCursor(){
+  rx+=(mx-rx)*0.12; ry+=(my-ry)*0.12;
+  cursorDot.style.cssText =`left:${mx}px;top:${my}px`;
+  cursorRing.style.cssText=`left:${rx}px;top:${ry}px`;
+  requestAnimationFrame(animCursor);
+})();
+
+/* ── CANVAS PARTÍCULAS ── */
+const canvas=document.getElementById('bg-canvas');
+const ctx=canvas.getContext('2d');
+let W,H,particles=[];
+function resize(){W=canvas.width=window.innerWidth;H=canvas.height=window.innerHeight;}
+resize(); window.addEventListener('resize',resize);
+class Particle{
+  constructor(){this.reset();}
+  reset(){
+    this.x=Math.random()*W; this.y=Math.random()*H;
+    this.vx=(Math.random()-.5)*.25; this.vy=(Math.random()-.5)*.25;
+    this.r=Math.random()*1.1+.3; this.a=Math.random()*.35+.04;
+    this.life=0; this.maxLife=Math.random()*450+200;
+  }
+  update(){
+    this.x+=this.vx; this.y+=this.vy; this.life++;
+    if(this.life>this.maxLife||this.x<0||this.x>W||this.y<0||this.y>H)this.reset();
+  }
+  draw(){
+    const f=Math.min(this.life/60,1)*Math.min((this.maxLife-this.life)/60,1);
+    ctx.beginPath(); ctx.arc(this.x,this.y,this.r,0,Math.PI*2);
+    ctx.fillStyle=`rgba(124,58,237,${this.a*f})`; ctx.fill();
+  }
+}
+function drawLines(){
+  for(let i=0;i<particles.length;i++)
+    for(let j=i+1;j<particles.length;j++){
+      const dx=particles[i].x-particles[j].x,dy=particles[i].y-particles[j].y;
+      const d=Math.sqrt(dx*dx+dy*dy);
+      if(d<110){
+        ctx.beginPath(); ctx.moveTo(particles[i].x,particles[i].y);
+        ctx.lineTo(particles[j].x,particles[j].y);
+        ctx.strokeStyle=`rgba(124,58,237,${.05*(1-d/110)})`;
+        ctx.lineWidth=.5; ctx.stroke();
+      }
+    }
+}
+for(let i=0;i<80;i++)particles.push(new Particle());
+(function animP(){
+  ctx.clearRect(0,0,W,H); drawLines();
+  particles.forEach(p=>{p.update();p.draw();}); requestAnimationFrame(animP);
+})();
+
+/* ── GLITCH LOGO ── */
+const logo=document.getElementById('mainLogo');
+function glitchLogo(){
+  const f=['clip-path:inset(30% 0 50% 0);transform:translateX(-3px)',
+           'clip-path:inset(60% 0 20% 0);transform:translateX(3px)',
+           'clip-path:inset(10% 0 70% 0);transform:translateX(-2px)',
+           'clip-path:none;transform:none'];
+  let i=0; const iv=setInterval(()=>{
+    logo.style.cssText=f[i++];
+    if(i>=f.length){clearInterval(iv);logo.style.cssText='';}
+  },60);
+}
+setTimeout(glitchLogo,500);
+
+/* ── SCRAMBLE ── */
+const CHARS='ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789#$%@!';
+function scramble(el){
+  const orig=el.dataset.orig||el.textContent.trim(); el.dataset.orig=orig;
+  let i=0; const total=orig.length*2.5; clearInterval(el._iv);
+  el._iv=setInterval(()=>{
+    el.textContent=orig.split('').map((c,idx)=>{
+      if(c===' ')return ' '; if(idx<i/2.5)return c;
+      return CHARS[Math.floor(Math.random()*CHARS.length)];
+    }).join('');
+    i++; if(i>=total){clearInterval(el._iv);el.textContent=orig;}
+  },28);
+}
+function restore(el){clearInterval(el._iv);el.textContent=el.dataset.orig||el.textContent;}
+document.querySelectorAll('.nav-link span,.drop-item').forEach(el=>{
+  el.dataset.orig=el.textContent.trim();
+  el.addEventListener('mouseenter',()=>scramble(el));
+  el.addEventListener('mouseleave',()=>restore(el));
+});
+document.querySelectorAll('.drop-label').forEach(dl=>{
+  const tn=[...dl.childNodes].find(n=>n.nodeType===3&&n.textContent.trim());
+  if(!tn)return;
+  const s=document.createElement('span');
+  s.textContent=tn.textContent.trim(); s.dataset.orig=s.textContent;
+  tn.replaceWith(s);
+  dl.addEventListener('mouseenter',()=>scramble(s));
+  dl.addEventListener('mouseleave',()=>restore(s));
+});
+
+/* ── REVEAL ── */
+const io=new IntersectionObserver(entries=>{
+  entries.forEach(({isIntersecting,target})=>{
+    if(!isIntersecting)return;
+    target.classList.add('active'); io.unobserve(target);
+  });
+},{threshold:.1});
+document.querySelectorAll('.reveal,.reveal-left,.reveal-right').forEach(el=>io.observe(el));
+
+/* ── TICKER ── */
+const segs=[
+  'CyTracks Soluções Cibernéticas','Quem Somos','Fundada em 2019',
+  'Zero Trust Architecture','Defesa em Profundidade','Parceiro Abnormal IA',
+  'Parceiro Semperis','Parceiro Safetica','Especialização Pura em Cyber',
+  'Honestidade Técnica','Resultado Mensurável','Consultoria Estratégica',
+];
+const tickerEl=document.getElementById('tickerInner');
+const txt=segs.map(s=>'   //   '+s).join('');
+tickerEl.textContent=txt+txt;
+</script>
+</body>
+</html>
