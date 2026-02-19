@@ -1,0 +1,1123 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="CyTracks — Aviso de Privacidade. Transparência e segurança no tratamento dos seus dados.">
+<title>CyTracks // Privacidade</title>
+<link rel="icon" type="image/png" href="https://i.imgur.com/ISlc727.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@300;400;600;700;900&family=JetBrains+Mono:wght@300;400;500&display=swap" rel="stylesheet">
+<script src="https://unpkg.com/lucide@latest"></script>
+<style>
+/* ============================================================
+   TOKENS
+============================================================ */
+:root {
+  --void:    #06060a;
+  --deep:    #0c0c12;
+  --surface: #111118;
+  --panel:   #16161f;
+  --edge:    rgba(255,255,255,0.06);
+  --accent:  #7c3aed;
+  --neon:    #a855f7;
+  --plasma:  #c084fc;
+  --cyan:    #06b6d4;
+  --cyan-glow: rgba(6,182,212,0.25);
+  --muted:   #52526b;
+  --dim:     #8888a8;
+  --body:    #c8c8e0;
+  --bright:  #f0f0ff;
+  --mono:    'JetBrains Mono', monospace;
+  --display: 'Barlow Condensed', sans-serif;
+  --ease-out-expo: cubic-bezier(0.19,1,0.22,1);
+  --ease-in-out:   cubic-bezier(0.77,0,0.175,1);
+}
+
+/* ============================================================
+   RESET & BASE
+============================================================ */
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+body{
+  background:var(--void);color:var(--body);
+  font-family:var(--display);overflow-x:hidden;
+  min-height:100vh;cursor:none;
+}
+
+/* ── FUNDO EXCLUSIVO — PRIVACIDADE ──────────────────────────
+   Tom ciano-teal sutil em cantos opostos, com vinheta central.
+   Diferencia visualmente sem sair do universo cyber-noir.
+──────────────────────────────────────────────────────────── */
+body::after{
+  content:'';
+  position:fixed;inset:0;
+  pointer-events:none;z-index:0;
+  background:
+    radial-gradient(ellipse 65% 50% at -5% 0%,
+      rgba(6,182,212,.10) 0%,
+      rgba(6,182,212,.03) 45%,
+      transparent 70%),
+    radial-gradient(ellipse 55% 45% at 108% 105%,
+      rgba(14,116,144,.12) 0%,
+      rgba(14,116,144,.04) 42%,
+      transparent 70%),
+    radial-gradient(ellipse 80% 60% at 50% 50%,
+      transparent 25%,
+      rgba(6,6,10,.4) 100%);
+}
+
+/* CURSOR */
+.cursor{position:fixed;pointer-events:none;z-index:9999;mix-blend-mode:difference;}
+.cursor-dot{width:6px;height:6px;background:#fff;border-radius:50%;transform:translate(-50%,-50%);}
+.cursor-ring{
+  width:32px;height:32px;border:1px solid rgba(168,85,247,.6);border-radius:50%;
+  transform:translate(-50%,-50%);
+  transition:width .3s var(--ease-out-expo),height .3s var(--ease-out-expo),border-color .3s;
+}
+body.cursor-hover .cursor-ring{width:52px;height:52px;border-color:var(--neon);}
+
+/* NOISE */
+body::before{
+  content:'';position:fixed;inset:0;pointer-events:none;z-index:9990;opacity:.028;
+  background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  background-size:180px;
+}
+
+/* BG CANVAS */
+#bg-canvas{position:fixed;inset:0;z-index:0;pointer-events:none;}
+
+/* ============================================================
+   HEADER
+============================================================ */
+header{
+  position:fixed;top:0;left:0;width:100%;z-index:1000;
+  padding:0 5%;height:72px;
+  display:flex;align-items:center;justify-content:space-between;
+  background:rgba(6,6,10,.8);
+  backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);
+  border-bottom:1px solid var(--edge);
+}
+header::after{
+  content:'';position:absolute;bottom:-1px;left:-100%;
+  width:35%;height:1px;
+  background:linear-gradient(90deg,transparent,var(--neon),var(--plasma),transparent);
+  animation:h-scan 5s ease-in-out infinite 1s;pointer-events:none;
+}
+@keyframes h-scan{0%{left:-35%;opacity:0;}5%{opacity:1;}95%{opacity:1;}100%{left:135%;opacity:0;}}
+.logo-wrap{display:flex;align-items:center;gap:.75rem;text-decoration:none;}
+.logo-wrap img{height:36px;display:block;}
+.logo-tag{font-family:var(--mono);font-size:.6rem;color:var(--neon);letter-spacing:2px;text-transform:uppercase;padding:2px 6px;border:1px solid rgba(168,85,247,.3);line-height:1.6;}
+.nav-primary{display:flex;align-items:center;gap:2.5rem;height:100%;list-style:none;}
+.nav-item{position:relative;height:100%;display:flex;align-items:center;}
+.nav-link{font-family:var(--display);font-size:.72rem;font-weight:600;letter-spacing:2.5px;text-transform:uppercase;color:var(--muted);text-decoration:none;padding:.4rem 0;position:relative;overflow:hidden;transition:color .2s;}
+.nav-link::after{content:'';position:absolute;bottom:0;left:0;width:0;height:1px;background:linear-gradient(90deg,var(--accent),var(--plasma));box-shadow:0 0 8px var(--neon);transition:width .4s var(--ease-in-out);}
+.nav-link:hover,.nav-link.active{color:var(--bright);}
+.nav-link:hover::after,.nav-link.active::after{width:100%;}
+.has-drop{cursor:pointer;}
+.drop-label{font-family:var(--display);font-size:.72rem;font-weight:600;letter-spacing:2.5px;text-transform:uppercase;color:var(--muted);display:flex;align-items:center;gap:.4rem;transition:color .2s;position:relative;}
+.drop-label::after{content:'';position:absolute;bottom:-4px;left:0;width:0;height:1px;background:linear-gradient(90deg,var(--accent),var(--plasma));box-shadow:0 0 8px var(--neon);transition:width .4s var(--ease-in-out);}
+.has-drop:hover .drop-label{color:var(--bright);}
+.has-drop:hover .drop-label::after{width:100%;}
+.drop-arrow{transition:transform .35s var(--ease-in-out);}
+.has-drop:hover .drop-arrow{transform:rotate(180deg);color:var(--neon);}
+.drop-panel{position:absolute;top:calc(100% + 1px);left:-16px;min-width:220px;background:rgba(12,12,18,.98);border:1px solid rgba(124,58,237,.2);border-top:2px solid var(--accent);padding:.5rem 0;opacity:0;visibility:hidden;transform:translateY(8px);transition:all .3s var(--ease-out-expo);clip-path:polygon(0 0,calc(100% - 12px) 0,100% 12px,100% 100%,12px 100%,0 calc(100% - 12px));box-shadow:0 20px 60px rgba(0,0,0,.6),0 0 40px rgba(124,58,237,.08);}
+.has-drop:hover .drop-panel{opacity:1;visibility:visible;transform:translateY(0);}
+.drop-item{display:flex;align-items:center;gap:.6rem;padding:.65rem 1.2rem;color:var(--dim);text-decoration:none;font-size:.72rem;font-weight:600;letter-spacing:1.8px;text-transform:uppercase;transition:color .2s,padding-left .2s;position:relative;}
+.drop-item::before{content:'//';font-family:var(--mono);font-size:.6rem;color:var(--neon);opacity:0;transform:translateX(-8px);transition:opacity .2s,transform .2s;}
+.drop-item:hover{color:var(--bright);padding-left:1.6rem;}
+.drop-item:hover::before{opacity:1;transform:translateX(0);}
+
+/* ============================================================
+   PAGE HERO — topo da página
+============================================================ */
+.page-hero{
+  position:relative;z-index:10;
+  padding:120px 5% 0;
+  border-bottom:1px solid var(--edge);
+  overflow:hidden;
+}
+/* Grade de fundo */
+.page-hero::before{
+  content:'';position:absolute;inset:0;pointer-events:none;
+  background-image:
+    linear-gradient(rgba(6,182,212,.04) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(6,182,212,.04) 1px,transparent 1px);
+  background-size:80px 80px;
+  mask-image:radial-gradient(ellipse 90% 80% at 30% 50%,black 10%,transparent 100%);
+}
+/* Linha vertical decorativa */
+.page-hero::after{
+  content:'';position:absolute;left:5%;top:0;bottom:0;
+  width:1px;
+  background:linear-gradient(to bottom,transparent,rgba(6,182,212,.35) 20%,rgba(6,182,212,.35) 80%,transparent);
+  pointer-events:none;
+}
+.hero-inner{
+  padding:3rem 3rem 3.5rem;
+  max-width:860px;
+}
+.page-eyebrow{
+  display:inline-flex;align-items:center;gap:.75rem;
+  font-family:var(--mono);font-size:.65rem;letter-spacing:3px;
+  color:var(--cyan);text-transform:uppercase;margin-bottom:1.5rem;
+  opacity:0;transform:translateY(14px);
+  animation:fade-up .8s var(--ease-out-expo) .2s forwards;
+}
+.eyebrow-line{width:32px;height:1px;background:linear-gradient(90deg,var(--cyan),transparent);}
+.page-title{
+  font-family:var(--display);font-weight:900;
+  font-size:clamp(3rem,6vw,6.5rem);line-height:.92;
+  letter-spacing:-2px;text-transform:uppercase;color:var(--bright);
+  margin-bottom:1.5rem;
+  opacity:0;transform:translateY(28px);
+  animation:fade-up .9s var(--ease-out-expo) .35s forwards;
+}
+.page-title .outline{color:transparent;-webkit-text-stroke:2px var(--neon);}
+.page-subtitle{
+  font-family:var(--mono);font-size:.8rem;font-weight:300;
+  line-height:2;color:var(--dim);max-width:520px;letter-spacing:.3px;
+  border-left:2px solid rgba(168,85,247,.3);padding-left:1.2rem;
+  margin-bottom:2.5rem;
+  opacity:0;transform:translateY(14px);
+  animation:fade-up .8s var(--ease-out-expo) .5s forwards;
+}
+.page-subtitle strong{color:var(--bright);font-weight:400;}
+
+/* Meta badges */
+.hero-meta{
+  display:flex;align-items:center;gap:1.5rem;flex-wrap:wrap;
+  padding-bottom:2.5rem;
+  opacity:0;transform:translateY(14px);
+  animation:fade-up .8s var(--ease-out-expo) .65s forwards;
+}
+.meta-badge{
+  font-family:var(--mono);font-size:.6rem;letter-spacing:2px;
+  text-transform:uppercase;color:var(--muted);
+  display:flex;align-items:center;gap:.5rem;
+}
+.meta-badge i{color:var(--neon);}
+.meta-sep{width:1px;height:16px;background:var(--edge);}
+
+/* ============================================================
+   ÍNDICE — sumário lateral (TOC)
+============================================================ */
+.content-wrap{
+  position:relative;z-index:10;
+  display:grid;
+  grid-template-columns:220px 1fr;
+  gap:0;
+  max-width:1200px;
+  margin:0 auto;
+  padding:0 5%;
+}
+
+.toc{
+  position:sticky;top:72px;
+  height:calc(100vh - 72px);
+  overflow-y:auto;
+  padding:3rem 2rem 3rem 0;
+  border-right:1px solid var(--edge);
+  align-self:start;
+}
+.toc::-webkit-scrollbar{width:2px;}
+.toc::-webkit-scrollbar-thumb{background:var(--edge);}
+
+.toc-label{
+  font-family:var(--mono);font-size:.55rem;letter-spacing:3px;
+  color:var(--muted);text-transform:uppercase;margin-bottom:1.2rem;
+  display:flex;align-items:center;gap:.5rem;
+}
+.toc-label::before{content:'//';color:var(--neon);}
+
+.toc-list{list-style:none;display:flex;flex-direction:column;gap:.15rem;}
+.toc-item a{
+  display:flex;align-items:center;gap:.6rem;
+  font-family:var(--mono);font-size:.62rem;letter-spacing:.5px;
+  color:var(--muted);text-decoration:none;
+  padding:.45rem .6rem;
+  border-left:1px solid transparent;
+  transition:color .2s,border-color .2s,padding-left .2s;
+  line-height:1.5;
+}
+.toc-item a:hover,.toc-item a.active{
+  color:var(--bright);
+  border-left-color:var(--neon);
+  padding-left:.9rem;
+}
+.toc-item a .toc-num{
+  color:var(--accent);font-size:.55rem;flex-shrink:0;
+  min-width:18px;
+}
+
+/* ============================================================
+   CONTEÚDO PRINCIPAL
+============================================================ */
+.privacy-content{
+  padding:3rem 0 6rem 3rem;
+}
+
+.privacy-section{
+  margin-bottom:3.5rem;
+  padding-bottom:3.5rem;
+  border-bottom:1px solid var(--edge);
+  opacity:0;transform:translateY(20px);
+  transition:opacity .8s var(--ease-out-expo),transform .8s var(--ease-out-expo);
+}
+.privacy-section:last-child{border-bottom:none;}
+.privacy-section.active{opacity:1;transform:none;}
+
+.section-header{
+  display:flex;align-items:flex-start;gap:1.2rem;
+  margin-bottom:1.5rem;
+}
+.section-num{
+  font-family:var(--mono);font-size:.65rem;letter-spacing:2px;
+  color:var(--neon);text-transform:uppercase;
+  padding:.3rem .6rem;
+  border:1px solid rgba(168,85,247,.2);
+  background:rgba(168,85,247,.05);
+  flex-shrink:0;margin-top:.35rem;
+  clip-path:polygon(0 0,calc(100% - 6px) 0,100% 6px,100% 100%,0 100%);
+}
+.section-title{
+  font-family:var(--display);font-size:1.8rem;font-weight:700;
+  text-transform:uppercase;letter-spacing:-.5px;color:var(--bright);
+  line-height:1.1;
+}
+.section-title .accent{color:var(--neon);}
+.section-title .cyan{color:var(--cyan);}
+
+.section-body{
+  font-family:var(--mono);font-size:.78rem;line-height:2.1;
+  color:var(--dim);letter-spacing:.2px;
+}
+.section-body p{margin-bottom:1rem;}
+.section-body p:last-child{margin-bottom:0;}
+.section-body strong{color:var(--bright);font-weight:400;}
+.section-body a{
+  color:var(--cyan);text-decoration:none;
+  border-bottom:1px solid rgba(6,182,212,.3);
+  transition:border-color .2s;
+}
+.section-body a:hover{border-bottom-color:var(--cyan);}
+
+/* Lista de itens */
+.data-list{
+  display:flex;flex-direction:column;gap:.6rem;
+  margin:1rem 0;
+}
+.data-item{
+  display:flex;align-items:flex-start;gap:.8rem;
+  padding:.75rem 1rem;
+  background:var(--surface);
+  border:1px solid var(--edge);
+  border-left:2px solid var(--neon);
+}
+.data-item.cyan{border-left-color:var(--cyan);}
+.data-item.plasma{border-left-color:var(--plasma);}
+.data-item i{flex-shrink:0;margin-top:.15rem;color:var(--neon);}
+.data-item.cyan i{color:var(--cyan);}
+.data-item.plasma i{color:var(--plasma);}
+.data-item-text{
+  font-family:var(--mono);font-size:.73rem;line-height:1.8;color:var(--dim);
+}
+.data-item-text strong{color:var(--bright);font-weight:400;display:block;
+  font-family:var(--display);font-size:.9rem;letter-spacing:.3px;text-transform:uppercase;}
+
+/* Tabela de direitos */
+.rights-grid{
+  display:grid;grid-template-columns:1fr 1fr;gap:1px;
+  background:var(--edge);margin:1rem 0;
+}
+.right-card{
+  background:var(--surface);
+  padding:1rem 1.2rem;
+  display:flex;align-items:flex-start;gap:.75rem;
+  transition:background .3s;
+}
+.right-card:hover{background:var(--panel);}
+.right-icon{flex-shrink:0;color:var(--neon);margin-top:.1rem;}
+.right-card:nth-child(even) .right-icon{color:var(--cyan);}
+.right-title{
+  font-family:var(--display);font-size:.9rem;font-weight:700;
+  text-transform:uppercase;letter-spacing:.3px;color:var(--bright);
+  margin-bottom:.25rem;
+}
+.right-desc{
+  font-family:var(--mono);font-size:.65rem;line-height:1.8;color:var(--muted);
+}
+
+/* Alerta / Destaque */
+.info-box{
+  display:flex;align-items:flex-start;gap:1rem;
+  padding:1.2rem 1.4rem;
+  background:rgba(168,85,247,.05);
+  border:1px solid rgba(168,85,247,.15);
+  border-left:3px solid var(--neon);
+  margin:1.2rem 0;
+}
+.info-box.cyan{
+  background:rgba(6,182,212,.05);
+  border-color:rgba(6,182,212,.15);
+  border-left-color:var(--cyan);
+}
+.info-box i{flex-shrink:0;color:var(--neon);margin-top:.1rem;}
+.info-box.cyan i{color:var(--cyan);}
+.info-box-text{font-family:var(--mono);font-size:.73rem;line-height:1.9;color:var(--dim);}
+.info-box-text strong{color:var(--bright);font-weight:400;}
+
+/* ============================================================
+   CTA FINAL
+============================================================ */
+.privacy-cta{
+  position:relative;z-index:10;
+  border-top:1px solid var(--edge);
+  padding:5rem 5%;
+  display:flex;align-items:center;justify-content:space-between;
+  gap:3rem;flex-wrap:wrap;
+}
+.cta-text{max-width:480px;}
+.cta-eyebrow{
+  font-family:var(--mono);font-size:.6rem;letter-spacing:3px;
+  color:var(--muted);text-transform:uppercase;margin-bottom:.8rem;
+  display:flex;align-items:center;gap:.6rem;
+}
+.cta-eyebrow::before{content:'//';color:var(--cyan);}
+.cta-title{
+  font-family:var(--display);font-size:2.2rem;font-weight:900;
+  text-transform:uppercase;letter-spacing:-1px;color:var(--bright);
+  line-height:1;margin-bottom:.8rem;
+}
+.cta-title .outline{color:transparent;-webkit-text-stroke:1.5px var(--neon);}
+.cta-sub{
+  font-family:var(--mono);font-size:.72rem;line-height:1.9;color:var(--dim);
+}
+.cta-actions{display:flex;gap:1rem;flex-wrap:wrap;align-items:center;}
+.btn-primary{
+  display:inline-flex;align-items:center;gap:.6rem;
+  padding:.75rem 1.75rem;background:var(--accent);color:#fff;
+  font-family:var(--display);font-size:.75rem;font-weight:700;
+  letter-spacing:2.5px;text-transform:uppercase;text-decoration:none;
+  cursor:none;position:relative;overflow:hidden;
+  clip-path:polygon(0 0,calc(100% - 10px) 0,100% 10px,100% 100%,10px 100%,0 calc(100% - 10px));
+  transition:background .3s,box-shadow .3s;
+}
+.btn-primary:hover{background:var(--neon);box-shadow:0 0 30px rgba(168,85,247,.4);}
+.btn-ghost{
+  display:inline-flex;align-items:center;gap:.5rem;
+  padding:.75rem 1.75rem;background:transparent;color:var(--dim);
+  font-family:var(--display);font-size:.75rem;font-weight:700;
+  letter-spacing:2.5px;text-transform:uppercase;text-decoration:none;
+  border:1px solid var(--edge);cursor:none;
+  transition:color .3s,border-color .3s,box-shadow .3s;
+}
+.btn-ghost:hover{color:var(--cyan);border-color:rgba(6,182,212,.5);box-shadow:0 0 20px var(--cyan-glow);}
+
+/* ============================================================
+   FOOTER
+============================================================ */
+footer{position:relative;z-index:10;border-top:1px solid var(--edge);}
+.footer-ticker{padding:.75rem 5%;border-bottom:1px solid var(--edge);overflow:hidden;white-space:nowrap;background:var(--surface);}
+.ticker-inner{display:inline-block;animation:ticker 30s linear infinite;font-family:var(--mono);font-size:.62rem;letter-spacing:2.5px;color:rgba(124,58,237,.4);text-transform:uppercase;}
+@keyframes ticker{0%{transform:translateX(0);}100%{transform:translateX(-50%);}}
+.footer-main{padding:3rem 5%;display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:2rem;}
+.footer-brand{display:flex;flex-direction:column;gap:.6rem;}
+.footer-copy{font-family:var(--mono);font-size:.62rem;letter-spacing:1px;color:var(--muted);}
+.footer-center{display:flex;flex-direction:column;align-items:center;gap:.5rem;}
+.footer-tagline{font-family:var(--mono);font-size:.6rem;letter-spacing:3px;color:rgba(6,182,212,.45);text-transform:uppercase;}
+.footer-slash{font-family:var(--display);font-size:1.4rem;font-weight:900;color:rgba(6,182,212,.2);letter-spacing:-1px;}
+.footer-links{display:flex;justify-content:flex-end;align-items:center;gap:2rem;list-style:none;}
+.footer-links a{font-family:var(--mono);font-size:.65rem;letter-spacing:1.5px;color:var(--muted);text-decoration:none;text-transform:uppercase;display:flex;align-items:center;gap:.4rem;transition:color .25s;position:relative;}
+.footer-links a::after{content:'';position:absolute;bottom:-2px;left:0;width:0;height:1px;background:var(--neon);box-shadow:0 0 6px var(--neon);transition:width .3s var(--ease-in-out);}
+.footer-links a:hover{color:var(--bright);}
+.footer-links a:hover::after{width:100%;}
+
+/* ============================================================
+   ANIMATIONS
+============================================================ */
+@keyframes fade-up{to{opacity:1;transform:translateY(0);}}
+
+/* ============================================================
+   RESPONSIVE
+============================================================ */
+@media(max-width:900px){
+  .content-wrap{grid-template-columns:1fr;}
+  .toc{display:none;}
+  .privacy-content{padding:2.5rem 0 5rem;}
+  .rights-grid{grid-template-columns:1fr;}
+  .privacy-cta{flex-direction:column;align-items:flex-start;}
+}
+@media(max-width:600px){
+  header{padding:0 4%;}
+  .page-hero{padding:110px 4% 0;}
+  .hero-inner{padding:2rem 0 2.5rem;}
+  .page-title{font-size:3rem;}
+  .content-wrap{padding:0 4%;}
+  .nav-primary{gap:1.2rem;}
+  .footer-main{grid-template-columns:1fr;text-align:center;}
+  .footer-links{justify-content:center;}
+  .footer-center{display:none;}
+}
+</style>
+</head>
+<body>
+
+<div class="cursor" id="cursor">
+  <div class="cursor-ring" id="cursorRing"></div>
+  <div class="cursor-dot" id="cursorDot"></div>
+</div>
+<canvas id="bg-canvas"></canvas>
+
+<!-- HEADER -->
+<header>
+  <a href="index.html" class="logo-wrap" aria-label="CyTracks — Início">
+    <img src="https://i.imgur.com/VC5Re3G.png" alt="CyTracks" id="mainLogo">
+    <span class="logo-tag">v2.6</span>
+  </a>
+  <nav>
+    <ul class="nav-primary">
+      <li class="nav-item"><a href="index.html"     class="nav-link"><span>Início</span></a></li>
+      <li class="nav-item"><a href="quemsomos.html" class="nav-link"><span>Quem Somos</span></a></li>
+      <li class="nav-item has-drop">
+        <span class="drop-label">
+          <span>Parceiros</span>
+          <i data-lucide="chevron-down" width="14" height="14" class="drop-arrow" aria-hidden="true"></i>
+        </span>
+        <div class="drop-panel">
+          <a href="abnormal.html"  class="drop-item">Abnormal IA</a>
+          <a href="semperis.html"  class="drop-item">Semperis</a>
+          <a href="safetica.html"  class="drop-item">Safetica</a>
+        </div>
+      </li>
+      <li class="nav-item"><a href="servicos.html"  class="nav-link"><span>Serviços</span></a></li>
+      <li class="nav-item"><a href="contato.html"   class="nav-link"><span>Contato</span></a></li>
+    </ul>
+  </nav>
+</header>
+
+<!-- HERO -->
+<section class="page-hero">
+  <div class="hero-inner">
+    <div class="page-eyebrow">
+      <span class="eyebrow-line"></span>
+      <span>// Aviso de Privacidade</span>
+    </div>
+    <h1 class="page-title">
+      Trans<span class="outline">parência</span><br>
+      de Dados
+    </h1>
+    <p class="page-subtitle">
+      A CyTracks trata dados com o mesmo rigor que aplica
+      à <strong>segurança dos nossos clientes</strong> — com transparência,
+      finalidade definida e respeito à sua privacidade.
+    </p>
+    <div class="hero-meta">
+      <div class="meta-badge">
+        <i data-lucide="calendar" width="13" height="13"></i>
+        Última atualização: Janeiro de 2026
+      </div>
+      <div class="meta-sep"></div>
+      <div class="meta-badge">
+        <i data-lucide="shield-check" width="13" height="13"></i>
+        Em conformidade com a LGPD
+      </div>
+      <div class="meta-sep"></div>
+      <div class="meta-badge">
+        <i data-lucide="lock" width="13" height="13"></i>
+        Lei nº 13.709/2018
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CONTEÚDO -->
+<div class="content-wrap">
+
+  <!-- ÍNDICE (TOC) -->
+  <aside class="toc" aria-label="Índice">
+    <div class="toc-label">Índice</div>
+    <ul class="toc-list">
+      <li class="toc-item"><a href="#s1"><span class="toc-num">01</span>Identificação</a></li>
+      <li class="toc-item"><a href="#s2"><span class="toc-num">02</span>Dados Coletados</a></li>
+      <li class="toc-item"><a href="#s3"><span class="toc-num">03</span>Finalidade</a></li>
+      <li class="toc-item"><a href="#s4"><span class="toc-num">04</span>Armazenamento</a></li>
+      <li class="toc-item"><a href="#s5"><span class="toc-num">05</span>Compartilhamento</a></li>
+      <li class="toc-item"><a href="#s6"><span class="toc-num">06</span>Cookies</a></li>
+      <li class="toc-item"><a href="#s7"><span class="toc-num">07</span>Segurança</a></li>
+      <li class="toc-item"><a href="#s8"><span class="toc-num">08</span>Seus Direitos</a></li>
+      <li class="toc-item"><a href="#s9"><span class="toc-num">09</span>Retenção</a></li>
+      <li class="toc-item"><a href="#s10"><span class="toc-num">10</span>Contato DPO</a></li>
+    </ul>
+  </aside>
+
+  <!-- SEÇÕES -->
+  <main class="privacy-content">
+
+    <!-- 01 -->
+    <section class="privacy-section" id="s1">
+      <div class="section-header">
+        <span class="section-num">01</span>
+        <h2 class="section-title">Identificação do <span class="accent">Controlador</span></h2>
+      </div>
+      <div class="section-body">
+        <p>
+          O controlador dos dados pessoais coletados por este site é a
+          <strong>CyTracks Soluções Cibernéticas</strong>, empresa especializada em consultoria
+          e serviços de segurança da informação, com atuação nacional.
+        </p>
+        <div class="data-list">
+          <div class="data-item">
+            <i data-lucide="building-2" width="15" height="15"></i>
+            <div class="data-item-text">
+              <strong>Razão Social</strong>
+              CyTracks Soluções Cibernéticas Ltda.
+            </div>
+          </div>
+          <div class="data-item cyan">
+            <i data-lucide="mail" width="15" height="15"></i>
+            <div class="data-item-text">
+              <strong>E-mail de contato</strong>
+              administracao@cytracks.io
+            </div>
+          </div>
+          <div class="data-item plasma">
+            <i data-lucide="linkedin" width="15" height="15"></i>
+            <div class="data-item-text">
+              <strong>LinkedIn</strong>
+              linkedin.com/company/cytracks
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 02 -->
+    <section class="privacy-section" id="s2">
+      <div class="section-header">
+        <span class="section-num">02</span>
+        <h2 class="section-title">Dados <span class="cyan">Coletados</span></h2>
+      </div>
+      <div class="section-body">
+        <p>
+          Este site coleta dados pessoais exclusivamente por meio do formulário de contato.
+          Não realizamos coleta automática de dados sensíveis ou de navegação sem base legal.
+        </p>
+        <div class="data-list">
+          <div class="data-item">
+            <i data-lucide="user" width="15" height="15"></i>
+            <div class="data-item-text">
+              <strong>Nome completo</strong>
+              Identificação do solicitante para personalização do atendimento.
+            </div>
+          </div>
+          <div class="data-item cyan">
+            <i data-lucide="at-sign" width="15" height="15"></i>
+            <div class="data-item-text">
+              <strong>Endereço de e-mail</strong>
+              Canal principal de resposta ao contato realizado.
+            </div>
+          </div>
+          <div class="data-item plasma">
+            <i data-lucide="building" width="15" height="15"></i>
+            <div class="data-item-text">
+              <strong>Empresa (opcional)</strong>
+              Contexto organizacional para adequar a proposta de serviço.
+            </div>
+          </div>
+          <div class="data-item">
+            <i data-lucide="phone" width="15" height="15"></i>
+            <div class="data-item-text">
+              <strong>Telefone (opcional)</strong>
+              Canal alternativo de retorno quando informado pelo usuário.
+            </div>
+          </div>
+          <div class="data-item cyan">
+            <i data-lucide="message-square" width="15" height="15"></i>
+            <div class="data-item-text">
+              <strong>Mensagem</strong>
+              Conteúdo da solicitação ou dúvida enviada pelo visitante.
+            </div>
+          </div>
+        </div>
+        <div class="info-box">
+          <i data-lucide="info" width="15" height="15"></i>
+          <div class="info-box-text">
+            Não coletamos dados de categorias sensíveis, como origem racial, convicções religiosas, dados de saúde ou biometria.
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 03 -->
+    <section class="privacy-section" id="s3">
+      <div class="section-header">
+        <span class="section-num">03</span>
+        <h2 class="section-title">Finalidade do <span class="accent">Tratamento</span></h2>
+      </div>
+      <div class="section-body">
+        <p>
+          Os dados coletados são utilizados exclusivamente para as seguintes finalidades,
+          com base legal no <strong>legítimo interesse</strong> e no <strong>consentimento do titular</strong>,
+          conforme Art. 7º da LGPD:
+        </p>
+        <div class="data-list">
+          <div class="data-item">
+            <i data-lucide="reply" width="15" height="15"></i>
+            <div class="data-item-text">
+              <strong>Resposta ao contato</strong>
+              Retorno ao visitante que preencheu o formulário ou entrou em contato por WhatsApp.
+            </div>
+          </div>
+          <div class="data-item cyan">
+            <i data-lucide="briefcase" width="15" height="15"></i>
+            <div class="data-item-text">
+              <strong>Proposta comercial</strong>
+              Elaboração de diagnóstico ou proposta de serviço adequada ao perfil do solicitante.
+            </div>
+          </div>
+          <div class="data-item plasma">
+            <i data-lucide="bar-chart-2" width="15" height="15"></i>
+            <div class="data-item-text">
+              <strong>Melhoria de atendimento</strong>
+              Análise interna de demandas para aprimorar os serviços prestados.
+            </div>
+          </div>
+        </div>
+        <p>
+          Não utilizamos os dados para fins de marketing não solicitado, perfilamento automatizado ou venda a terceiros.
+        </p>
+      </div>
+    </section>
+
+    <!-- 04 -->
+    <section class="privacy-section" id="s4">
+      <div class="section-header">
+        <span class="section-num">04</span>
+        <h2 class="section-title">Armazenamento <span class="cyan">e Sessão</span></h2>
+      </div>
+      <div class="section-body">
+        <p>
+          Os dados do formulário são transmitidos de forma segura ao nosso e-mail corporativo
+          por meio do serviço FormSubmit. Adicionalmente, utilizamos <strong>Session Storage</strong>
+          no navegador para melhorar a experiência do usuário durante a navegação.
+        </p>
+        <div class="info-box cyan">
+          <i data-lucide="clock" width="15" height="15"></i>
+          <div class="info-box-text">
+            <strong>Session Storage:</strong> os dados salvos temporariamente no navegador
+            (como campos parcialmente preenchidos) são <strong>apagados automaticamente</strong>
+            ao fechar a aba ou o navegador. Nenhum dado é persistido localmente.
+          </div>
+        </div>
+        <p>
+          Os e-mails recebidos são armazenados no servidor de e-mail corporativo da CyTracks,
+          protegido por autenticação de múltiplos fatores e criptografia em repouso.
+        </p>
+      </div>
+    </section>
+
+    <!-- 05 -->
+    <section class="privacy-section" id="s5">
+      <div class="section-header">
+        <span class="section-num">05</span>
+        <h2 class="section-title">Compartilhamento <span class="accent">com Terceiros</span></h2>
+      </div>
+      <div class="section-body">
+        <p>
+          A CyTracks adota uma política restritiva de compartilhamento de dados.
+          Seus dados pessoais podem ser compartilhados <strong>apenas nas seguintes situações</strong>:
+        </p>
+        <div class="data-list">
+          <div class="data-item">
+            <i data-lucide="send" width="15" height="15"></i>
+            <div class="data-item-text">
+              <strong>FormSubmit (operador)</strong>
+              Serviço utilizado para encaminhamento do formulário ao e-mail corporativo. Processa os dados exclusivamente para essa finalidade.
+            </div>
+          </div>
+          <div class="data-item cyan">
+            <i data-lucide="scale" width="15" height="15"></i>
+            <div class="data-item-text">
+              <strong>Obrigação legal</strong>
+              Quando exigido por autoridade competente, decisão judicial ou regulação aplicável.
+            </div>
+          </div>
+        </div>
+        <p>
+          Não vendemos, alugamos ou cedemos dados pessoais a terceiros para fins comerciais ou de marketing.
+        </p>
+      </div>
+    </section>
+
+    <!-- 06 -->
+    <section class="privacy-section" id="s6">
+      <div class="section-header">
+        <span class="section-num">06</span>
+        <h2 class="section-title">Cookies e <span class="cyan">Rastreamento</span></h2>
+      </div>
+      <div class="section-body">
+        <p>
+          Este site <strong>não utiliza cookies de rastreamento, analytics ou publicidade</strong>.
+          Não instalamos pixels de terceiros, tags de retargeting ou qualquer mecanismo de
+          monitoramento de comportamento de navegação.
+        </p>
+        <div class="info-box">
+          <i data-lucide="shield-check" width="15" height="15"></i>
+          <div class="info-box-text">
+            A única tecnologia de armazenamento utilizada é o <strong>Session Storage</strong> nativo
+            do navegador, exclusivamente para persistência temporária dos campos do formulário de contato.
+            Esse dado nunca é enviado a servidores de terceiros.
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 07 -->
+    <section class="privacy-section" id="s7">
+      <div class="section-header">
+        <span class="section-num">07</span>
+        <h2 class="section-title">Medidas de <span class="accent">Segurança</span></h2>
+      </div>
+      <div class="section-body">
+        <p>
+          Como empresa especializada em segurança cibernética, aplicamos internamente
+          as mesmas práticas que recomendamos aos nossos clientes:
+        </p>
+        <div class="data-list">
+          <div class="data-item">
+            <i data-lucide="lock" width="15" height="15"></i>
+            <div class="data-item-text">
+              <strong>Criptografia em trânsito</strong>
+              Todo o tráfego do site é servido via HTTPS com TLS atualizado.
+            </div>
+          </div>
+          <div class="data-item cyan">
+            <i data-lucide="key-round" width="15" height="15"></i>
+            <div class="data-item-text">
+              <strong>Autenticação multifator</strong>
+              Acesso ao e-mail e sistemas internos protegido por MFA obrigatório.
+            </div>
+          </div>
+          <div class="data-item plasma">
+            <i data-lucide="eye-off" width="15" height="15"></i>
+            <div class="data-item-text">
+              <strong>Princípio do menor privilégio</strong>
+              Acesso aos dados restrito apenas às pessoas com necessidade operacional definida.
+            </div>
+          </div>
+          <div class="data-item">
+            <i data-lucide="refresh-cw" width="15" height="15"></i>
+            <div class="data-item-text">
+              <strong>Revisão periódica</strong>
+              Políticas e controles de acesso revisados regularmente conforme evolução do risco.
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 08 -->
+    <section class="privacy-section" id="s8">
+      <div class="section-header">
+        <span class="section-num">08</span>
+        <h2 class="section-title">Seus <span class="cyan">Direitos</span></h2>
+      </div>
+      <div class="section-body">
+        <p>
+          Nos termos da Lei Geral de Proteção de Dados (Lei nº 13.709/2018),
+          você possui os seguintes direitos em relação aos seus dados pessoais:
+        </p>
+        <div class="rights-grid">
+          <div class="right-card">
+            <i data-lucide="search" width="16" height="16" class="right-icon"></i>
+            <div>
+              <div class="right-title">Acesso</div>
+              <div class="right-desc">Solicitar confirmação e acesso aos dados que mantemos sobre você.</div>
+            </div>
+          </div>
+          <div class="right-card">
+            <i data-lucide="pencil" width="16" height="16" class="right-icon"></i>
+            <div>
+              <div class="right-title">Correção</div>
+              <div class="right-desc">Solicitar correção de dados incompletos, inexatos ou desatualizados.</div>
+            </div>
+          </div>
+          <div class="right-card">
+            <i data-lucide="trash-2" width="16" height="16" class="right-icon"></i>
+            <div>
+              <div class="right-title">Exclusão</div>
+              <div class="right-desc">Requerer a eliminação dos seus dados pessoais de nossos registros.</div>
+            </div>
+          </div>
+          <div class="right-card">
+            <i data-lucide="x-circle" width="16" height="16" class="right-icon"></i>
+            <div>
+              <div class="right-title">Oposição</div>
+              <div class="right-desc">Opor-se ao tratamento realizado com base em legítimo interesse.</div>
+            </div>
+          </div>
+          <div class="right-card">
+            <i data-lucide="download" width="16" height="16" class="right-icon"></i>
+            <div>
+              <div class="right-title">Portabilidade</div>
+              <div class="right-desc">Solicitar seus dados em formato estruturado e legível por máquina.</div>
+            </div>
+          </div>
+          <div class="right-card">
+            <i data-lucide="info" width="16" height="16" class="right-icon"></i>
+            <div>
+              <div class="right-title">Informação</div>
+              <div class="right-desc">Ser informado sobre entidades públicas e privadas com quem compartilhamos dados.</div>
+            </div>
+          </div>
+        </div>
+        <p style="margin-top:1rem;">
+          Para exercer qualquer um desses direitos, entre em contato pelo e-mail
+          <strong>administracao@cytracks.io</strong>. Respondemos todas as solicitações em até <strong>15 dias úteis</strong>.
+        </p>
+      </div>
+    </section>
+
+    <!-- 09 -->
+    <section class="privacy-section" id="s9">
+      <div class="section-header">
+        <span class="section-num">09</span>
+        <h2 class="section-title">Retenção de <span class="accent">Dados</span></h2>
+      </div>
+      <div class="section-body">
+        <p>
+          Mantemos os dados pessoais pelo período necessário para cumprir a finalidade para
+          a qual foram coletados ou para atender a obrigações legais aplicáveis.
+        </p>
+        <div class="data-list">
+          <div class="data-item">
+            <i data-lucide="message-circle" width="15" height="15"></i>
+            <div class="data-item-text">
+              <strong>Dados do formulário de contato</strong>
+              Retidos pelo período de até 2 anos após o último contato, salvo relação contratual estabelecida.
+            </div>
+          </div>
+          <div class="data-item cyan">
+            <i data-lucide="briefcase" width="15" height="15"></i>
+            <div class="data-item-text">
+              <strong>Dados de clientes ativos</strong>
+              Mantidos durante a vigência do contrato e por até 5 anos após seu encerramento, conforme exigência legal.
+            </div>
+          </div>
+        </div>
+        <p>
+          Após o período de retenção, os dados são eliminados de forma segura ou anonimizados,
+          impossibilitando a identificação do titular.
+        </p>
+      </div>
+    </section>
+
+    <!-- 10 -->
+    <section class="privacy-section" id="s10">
+      <div class="section-header">
+        <span class="section-num">10</span>
+        <h2 class="section-title">Contato com o <span class="cyan">DPO</span></h2>
+      </div>
+      <div class="section-body">
+        <p>
+          A CyTracks designou um <strong>Encarregado de Proteção de Dados (DPO)</strong>
+          responsável por garantir a conformidade com a LGPD e atender às solicitações dos titulares.
+        </p>
+        <div class="data-list">
+          <div class="data-item">
+            <i data-lucide="user-check" width="15" height="15"></i>
+            <div class="data-item-text">
+              <strong>Canal do DPO</strong>
+              administracao@cytracks.io — assunto: "Privacidade / LGPD"
+            </div>
+          </div>
+          <div class="data-item cyan">
+            <i data-lucide="clock" width="15" height="15"></i>
+            <div class="data-item-text">
+              <strong>Prazo de resposta</strong>
+              Até 15 dias úteis a contar da data de recebimento da solicitação.
+            </div>
+          </div>
+          <div class="data-item plasma">
+            <i data-lucide="landmark" width="15" height="15"></i>
+            <div class="data-item-text">
+              <strong>Autoridade Nacional</strong>
+              Em caso de insatisfação, você pode acionar a ANPD — Autoridade Nacional de Proteção de Dados (gov.br/anpd).
+            </div>
+          </div>
+        </div>
+        <div class="info-box">
+          <i data-lucide="shield" width="15" height="15"></i>
+          <div class="info-box-text">
+            Este aviso pode ser atualizado periodicamente. Mudanças significativas serão comunicadas
+            na própria página com a data de revisão atualizada no topo.
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+</div>
+
+<!-- CTA -->
+<div class="privacy-cta">
+  <div class="cta-text">
+    <div class="cta-eyebrow">Dúvidas sobre privacidade?</div>
+    <h2 class="cta-title">Fale com<br>nossa <span class="outline">equipe</span></h2>
+    <p class="cta-sub">Entre em contato para exercer seus direitos ou esclarecer qualquer ponto deste aviso.</p>
+  </div>
+  <div class="cta-actions">
+    <a href="contato.html" class="btn-primary">
+      <i data-lucide="mail" width="15" height="15"></i>
+      Entrar em Contato
+    </a>
+    <a href="index.html" class="btn-ghost">
+      <i data-lucide="arrow-left" width="15" height="15"></i>
+      Voltar ao Início
+    </a>
+  </div>
+</div>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-ticker" aria-hidden="true">
+    <span class="ticker-inner" id="tickerInner"></span>
+  </div>
+  <div class="footer-main">
+    <div class="footer-brand">
+      <p class="footer-copy">&copy; 2026 CyTracks Soluções Cibernéticas.<br>Todos os direitos reservados.</p>
+    </div>
+    <div class="footer-center">
+      <div class="footer-slash">CY//</div>
+      <span class="footer-tagline">Inteligência. Proteção. Resultado.</span>
+    </div>
+    <ul class="footer-links">
+      <li><a href="privacidade.html" class="active">Aviso de Privacidade</a></li>
+      <li>
+        <a href="https://www.linkedin.com/company/cytracks" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn">
+          <i data-lucide="linkedin" width="14" height="14"></i>LinkedIn
+        </a>
+      </li>
+    </ul>
+  </div>
+</footer>
+
+<script>
+lucide.createIcons();
+
+/* ── CURSOR ── */
+const cursorDot  = document.getElementById('cursorDot');
+const cursorRing = document.getElementById('cursorRing');
+let mx=0,my=0,rx=0,ry=0;
+document.addEventListener('mousemove',e=>{mx=e.clientX;my=e.clientY;});
+document.querySelectorAll('a,button,[role=button],.has-drop,.right-card').forEach(el=>{
+  el.addEventListener('mouseenter',()=>document.body.classList.add('cursor-hover'));
+  el.addEventListener('mouseleave',()=>document.body.classList.remove('cursor-hover'));
+});
+(function animCursor(){
+  rx+=(mx-rx)*.12;ry+=(my-ry)*.12;
+  cursorDot.style.cssText =`left:${mx}px;top:${my}px`;
+  cursorRing.style.cssText=`left:${rx}px;top:${ry}px`;
+  requestAnimationFrame(animCursor);
+})();
+
+/* ── CANVAS PARTÍCULAS — ciano nesta página ── */
+const canvas=document.getElementById('bg-canvas'),ctx=canvas.getContext('2d');
+let W,H,particles=[];
+function resize(){W=canvas.width=window.innerWidth;H=canvas.height=window.innerHeight;}
+resize();window.addEventListener('resize',resize);
+/* Duas cores de partícula: 70% ciano, 30% roxo — mistura sutil */
+const PCOLS=[
+  [6,182,212],   // --cyan
+  [6,182,212],
+  [6,182,212],
+  [14,116,144],  // teal escuro
+  [124,58,237],  // --accent roxo (minoritário)
+];
+class Particle{
+  constructor(){this.reset();}
+  reset(){
+    this.x=Math.random()*W;this.y=Math.random()*H;
+    this.vx=(Math.random()-.5)*.25;this.vy=(Math.random()-.5)*.25;
+    this.r=Math.random()*1.1+.3;this.a=Math.random()*.3+.04;
+    this.life=0;this.max=Math.random()*450+200;
+    this.col=PCOLS[Math.floor(Math.random()*PCOLS.length)];
+  }
+  update(){this.x+=this.vx;this.y+=this.vy;this.life++;if(this.life>this.max||this.x<0||this.x>W||this.y<0||this.y>H)this.reset();}
+  draw(){
+    const f=Math.min(this.life/60,1)*Math.min((this.max-this.life)/60,1);
+    ctx.beginPath();ctx.arc(this.x,this.y,this.r,0,Math.PI*2);
+    ctx.fillStyle=`rgba(${this.col[0]},${this.col[1]},${this.col[2]},${this.a*f})`;
+    ctx.fill();
+  }
+}
+function drawLines(){
+  for(let i=0;i<particles.length;i++)
+    for(let j=i+1;j<particles.length;j++){
+      const dx=particles[i].x-particles[j].x,dy=particles[i].y-particles[j].y,d=Math.sqrt(dx*dx+dy*dy);
+      if(d<110){
+        /* Cor da linha interpolada entre as duas partículas */
+        const ca=particles[i].col,cb=particles[j].col;
+        const r=Math.round((ca[0]+cb[0])/2),g=Math.round((ca[1]+cb[1])/2),b=Math.round((ca[2]+cb[2])/2);
+        ctx.beginPath();ctx.moveTo(particles[i].x,particles[i].y);
+        ctx.lineTo(particles[j].x,particles[j].y);
+        ctx.strokeStyle=`rgba(${r},${g},${b},${.055*(1-d/110)})`;
+        ctx.lineWidth=.5;ctx.stroke();
+      }
+    }
+}
+for(let i=0;i<80;i++)particles.push(new Particle());
+(function animP(){ctx.clearRect(0,0,W,H);drawLines();particles.forEach(p=>{p.update();p.draw();});requestAnimationFrame(animP);})();
+
+/* ── GLITCH LOGO ── */
+const logo=document.getElementById('mainLogo');
+function glitchLogo(){const f=['clip-path:inset(30% 0 50% 0);transform:translateX(-3px)','clip-path:inset(60% 0 20% 0);transform:translateX(3px)','clip-path:inset(10% 0 70% 0);transform:translateX(-2px)','clip-path:none;transform:none'];let i=0;const iv=setInterval(()=>{logo.style.cssText=f[i++];if(i>=f.length){clearInterval(iv);logo.style.cssText='';}},60);}
+setTimeout(glitchLogo,500);
+
+/* ── SCRAMBLE ── */
+const CHARS='ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789#$%@!';
+function scramble(el){const orig=el.dataset.orig||el.textContent.trim();el.dataset.orig=orig;let i=0;const tot=orig.length*2.5;clearInterval(el._iv);el._iv=setInterval(()=>{el.textContent=orig.split('').map((c,idx)=>{if(c===' ')return ' ';if(idx<i/2.5)return c;return CHARS[Math.floor(Math.random()*CHARS.length)];}).join('');i++;if(i>=tot){clearInterval(el._iv);el.textContent=orig;}},28);}
+function restore(el){clearInterval(el._iv);el.textContent=el.dataset.orig||el.textContent;}
+document.querySelectorAll('.nav-link span,.drop-item').forEach(el=>{el.dataset.orig=el.textContent.trim();el.addEventListener('mouseenter',()=>scramble(el));el.addEventListener('mouseleave',()=>restore(el));});
+document.querySelectorAll('.drop-label').forEach(dl=>{const tn=[...dl.childNodes].find(n=>n.nodeType===3&&n.textContent.trim());if(!tn)return;const s=document.createElement('span');s.textContent=tn.textContent.trim();s.dataset.orig=s.textContent;tn.replaceWith(s);dl.addEventListener('mouseenter',()=>scramble(s));dl.addEventListener('mouseleave',()=>restore(s));});
+
+/* ── REVEAL POR SCROLL ── */
+const io=new IntersectionObserver(entries=>{
+  entries.forEach(({isIntersecting,target})=>{
+    if(!isIntersecting)return;
+    target.classList.add('active');
+    io.unobserve(target);
+  });
+},{threshold:.08});
+document.querySelectorAll('.privacy-section').forEach(el=>io.observe(el));
+
+/* ── TOC ATIVO ── */
+const tocLinks = document.querySelectorAll('.toc-item a');
+const sections  = document.querySelectorAll('.privacy-section');
+const tocObserver = new IntersectionObserver(entries=>{
+  entries.forEach(e=>{
+    if(!e.isIntersecting)return;
+    const id=e.target.id;
+    tocLinks.forEach(a=>{
+      a.classList.toggle('active', a.getAttribute('href')==='#'+id);
+    });
+  });
+},{rootMargin:'-25% 0px -65% 0px'});
+sections.forEach(s=>tocObserver.observe(s));
+
+/* ── TICKER ── */
+const segs=[
+  'CyTracks Soluções Cibernéticas','Aviso de Privacidade',
+  'LGPD Lei 13.709/2018','Transparência de Dados',
+  'Segurança da Informação','Zero Trust Architecture',
+  'Direitos dos Titulares','Proteção de Dados Pessoais',
+  'Conformidade e Compliance','DPO — Data Protection Officer',
+];
+const tickerEl=document.getElementById('tickerInner');
+const txt=segs.map(s=>'   //   '+s).join('');
+tickerEl.textContent=txt+txt;
+</script>
+</body>
+</html>

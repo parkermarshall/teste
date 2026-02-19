@@ -1,0 +1,807 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="CyTracks — Fale com nossos especialistas em segurança cibernética.">
+<title>CyTracks // Contato</title>
+<link rel="icon" type="image/png" href="https://i.imgur.com/ISlc727.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@300;400;600;700;900&family=JetBrains+Mono:wght@300;400;500&display=swap" rel="stylesheet">
+<script src="https://unpkg.com/lucide@latest"></script>
+<style>
+/* ============================================================
+   TOKENS
+============================================================ */
+:root {
+  --void:    #06060a;
+  --deep:    #0c0c12;
+  --surface: #111118;
+  --panel:   #16161f;
+  --edge:    rgba(255,255,255,0.06);
+  --accent:  #7c3aed;
+  --neon:    #a855f7;
+  --plasma:  #c084fc;
+  --cyan:    #06b6d4;
+  --cyan-glow: rgba(6,182,212,0.25);
+  --muted:   #52526b;
+  --dim:     #8888a8;
+  --body:    #c8c8e0;
+  --bright:  #f0f0ff;
+  --mono:    'JetBrains Mono', monospace;
+  --display: 'Barlow Condensed', sans-serif;
+  --ease-out-expo: cubic-bezier(0.19,1,0.22,1);
+  --ease-in-out:   cubic-bezier(0.77,0,0.175,1);
+}
+
+/* ============================================================
+   RESET & BASE
+============================================================ */
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+body{
+  background:var(--void);color:var(--body);
+  font-family:var(--display);overflow-x:hidden;
+  min-height:100vh;cursor:none;
+}
+
+/* CURSOR */
+.cursor{position:fixed;pointer-events:none;z-index:9999;mix-blend-mode:difference;}
+.cursor-dot{width:6px;height:6px;background:#fff;border-radius:50%;transform:translate(-50%,-50%);}
+.cursor-ring{
+  width:32px;height:32px;border:1px solid rgba(168,85,247,.6);border-radius:50%;
+  transform:translate(-50%,-50%);
+  transition:width .3s var(--ease-out-expo),height .3s var(--ease-out-expo),border-color .3s;
+}
+body.cursor-hover .cursor-ring{width:52px;height:52px;border-color:var(--neon);}
+
+/* NOISE */
+body::before{
+  content:'';position:fixed;inset:0;pointer-events:none;z-index:9990;opacity:.028;
+  background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  background-size:180px;
+}
+
+/* BG CANVAS */
+#bg-canvas{position:fixed;inset:0;z-index:0;pointer-events:none;}
+
+/* ============================================================
+   HEADER
+============================================================ */
+header{
+  position:fixed;top:0;left:0;width:100%;z-index:1000;
+  padding:0 5%;height:72px;
+  display:flex;align-items:center;justify-content:space-between;
+  background:rgba(6,6,10,.8);
+  backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);
+  border-bottom:1px solid var(--edge);
+}
+header::after{
+  content:'';position:absolute;bottom:-1px;left:-100%;
+  width:35%;height:1px;
+  background:linear-gradient(90deg,transparent,var(--neon),var(--plasma),transparent);
+  animation:h-scan 5s ease-in-out infinite 1s;pointer-events:none;
+}
+@keyframes h-scan{0%{left:-35%;opacity:0;}5%{opacity:1;}95%{opacity:1;}100%{left:135%;opacity:0;}}
+.logo-wrap{display:flex;align-items:center;gap:.75rem;text-decoration:none;}
+.logo-wrap img{height:36px;display:block;}
+.logo-tag{font-family:var(--mono);font-size:.6rem;color:var(--neon);letter-spacing:2px;text-transform:uppercase;padding:2px 6px;border:1px solid rgba(168,85,247,.3);line-height:1.6;}
+.nav-primary{display:flex;align-items:center;gap:2.5rem;height:100%;list-style:none;}
+.nav-item{position:relative;height:100%;display:flex;align-items:center;}
+.nav-link{font-family:var(--display);font-size:.72rem;font-weight:600;letter-spacing:2.5px;text-transform:uppercase;color:var(--muted);text-decoration:none;padding:.4rem 0;position:relative;overflow:hidden;transition:color .2s;}
+.nav-link::after{content:'';position:absolute;bottom:0;left:0;width:0;height:1px;background:linear-gradient(90deg,var(--accent),var(--plasma));box-shadow:0 0 8px var(--neon);transition:width .4s var(--ease-in-out);}
+.nav-link:hover,.nav-link.active{color:var(--bright);}
+.nav-link:hover::after,.nav-link.active::after{width:100%;}
+.has-drop{cursor:pointer;}
+.drop-label{font-family:var(--display);font-size:.72rem;font-weight:600;letter-spacing:2.5px;text-transform:uppercase;color:var(--muted);display:flex;align-items:center;gap:.4rem;transition:color .2s;position:relative;}
+.drop-label::after{content:'';position:absolute;bottom:-4px;left:0;width:0;height:1px;background:linear-gradient(90deg,var(--accent),var(--plasma));box-shadow:0 0 8px var(--neon);transition:width .4s var(--ease-in-out);}
+.has-drop:hover .drop-label{color:var(--bright);}
+.has-drop:hover .drop-label::after{width:100%;}
+.drop-arrow{transition:transform .35s var(--ease-in-out);}
+.has-drop:hover .drop-arrow{transform:rotate(180deg);color:var(--neon);}
+.drop-panel{position:absolute;top:calc(100% + 1px);left:-16px;min-width:220px;background:rgba(12,12,18,.98);border:1px solid rgba(124,58,237,.2);border-top:2px solid var(--accent);padding:.5rem 0;opacity:0;visibility:hidden;transform:translateY(8px);transition:all .3s var(--ease-out-expo);clip-path:polygon(0 0,calc(100% - 12px) 0,100% 12px,100% 100%,12px 100%,0 calc(100% - 12px));box-shadow:0 20px 60px rgba(0,0,0,.6),0 0 40px rgba(124,58,237,.08);}
+.has-drop:hover .drop-panel{opacity:1;visibility:visible;transform:translateY(0);}
+.drop-item{display:flex;align-items:center;gap:.6rem;padding:.65rem 1.2rem;color:var(--dim);text-decoration:none;font-size:.72rem;font-weight:600;letter-spacing:1.8px;text-transform:uppercase;transition:color .2s,padding-left .2s;position:relative;}
+.drop-item::before{content:'//';font-family:var(--mono);font-size:.6rem;color:var(--neon);opacity:0;transform:translateX(-8px);transition:opacity .2s,transform .2s;}
+.drop-item:hover{color:var(--bright);padding-left:1.6rem;}
+.drop-item:hover::before{opacity:1;transform:translateX(0);}
+
+/* ============================================================
+   PAGE LAYOUT — hero split
+============================================================ */
+.contact-page{
+  position:relative;z-index:10;
+  min-height:100svh;
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  /* Empurra tudo abaixo do header fixo de 72px */
+  margin-top:72px;
+}
+
+/* Grade de fundo — via wrapper separado para não conflitar com ::before/::after */
+.contact-page::after{
+  content:'';position:absolute;inset:0;pointer-events:none;z-index:0;
+  background-image:
+    linear-gradient(rgba(124,58,237,.03) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(124,58,237,.03) 1px,transparent 1px);
+  background-size:80px 80px;
+  mask-image:radial-gradient(ellipse 100% 100% at 50% 50%,black 10%,transparent 100%);
+}
+
+/* ============================================================
+   COLUNA ESQUERDA — info + canais
+============================================================ */
+.contact-info{
+  position:relative;z-index:10;
+  display:flex;flex-direction:column;justify-content:center;
+  /* padding simétrico: topo/fundo generoso, lados alinhados ao grid 5% do body */
+  padding:5rem 3.5rem 5rem 8%;
+  border-right:1px solid var(--edge);
+  /* altura mínima garante que ambas as colunas preencham o viewport */
+  min-height:calc(100svh - 72px);
+}
+
+.page-eyebrow{
+  display:inline-flex;align-items:center;gap:.75rem;
+  font-family:var(--mono);font-size:.65rem;letter-spacing:3px;
+  color:var(--cyan);text-transform:uppercase;margin-bottom:2rem;
+  opacity:0;transform:translateY(14px);
+  animation:fade-up .8s var(--ease-out-expo) .3s forwards;
+}
+.eyebrow-line{width:32px;height:1px;background:linear-gradient(90deg,var(--cyan),transparent);}
+
+.contact-title{
+  font-family:var(--display);font-weight:900;
+  font-size:clamp(3rem,5.5vw,6rem);line-height:.92;
+  letter-spacing:-2px;text-transform:uppercase;color:var(--bright);
+  margin-bottom:2rem;
+  opacity:0;transform:translateY(28px);
+  animation:fade-up .9s var(--ease-out-expo) .45s forwards;
+}
+.contact-title .outline{color:transparent;-webkit-text-stroke:2px var(--neon);}
+.contact-title .cyan{color:var(--cyan);}
+
+.contact-lead{
+  font-family:var(--mono);font-size:.8rem;font-weight:300;
+  line-height:2;color:var(--dim);max-width:400px;letter-spacing:.3px;
+  border-left:2px solid rgba(168,85,247,.3);padding-left:1.2rem;
+  margin-bottom:3rem;
+  opacity:0;transform:translateY(14px);
+  animation:fade-up .8s var(--ease-out-expo) .6s forwards;
+}
+.contact-lead strong{color:var(--bright);font-weight:400;}
+
+/* Canais de contato */
+.contact-channels{
+  display:flex;flex-direction:column;gap:.8rem;
+  opacity:0;transform:translateY(14px);
+  animation:fade-up .8s var(--ease-out-expo) .75s forwards;
+}
+.channel{
+  display:flex;align-items:center;gap:1rem;
+  padding:1rem 1.2rem;
+  border:1px solid var(--edge);
+  background:var(--surface);
+  text-decoration:none;
+  color:var(--dim);
+  transition:border-color .3s,background .3s,color .3s;
+  position:relative;overflow:hidden;
+  cursor:none;
+}
+.channel::after{
+  content:'';position:absolute;bottom:0;left:0;width:0;height:1px;
+  transition:width .4s var(--ease-out-expo);
+}
+.channel.wpp::after{background:linear-gradient(90deg,#22c55e,#4ade80);}
+.channel.mail::after{background:linear-gradient(90deg,var(--cyan),var(--neon));}
+.channel.linkedin::after{background:linear-gradient(90deg,#0ea5e9,var(--cyan));}
+.channel:hover{background:var(--panel);color:var(--bright);border-color:rgba(168,85,247,.25);}
+.channel:hover::after{width:100%;}
+.channel-icon{
+  width:36px;height:36px;flex-shrink:0;
+  display:flex;align-items:center;justify-content:center;
+  border:1px solid var(--edge);
+  transition:border-color .3s;
+}
+.channel.wpp .channel-icon{color:#22c55e;}
+.channel.mail .channel-icon{color:var(--cyan);}
+.channel.linkedin .channel-icon{color:#0ea5e9;}
+.channel:hover .channel-icon{border-color:rgba(168,85,247,.4);}
+.channel-label{
+  font-family:var(--mono);font-size:.58rem;
+  letter-spacing:2px;color:var(--muted);text-transform:uppercase;margin-bottom:.15rem;
+}
+.channel-value{
+  font-family:var(--display);font-size:1rem;font-weight:700;
+  text-transform:uppercase;letter-spacing:.5px;color:var(--bright);
+}
+.channel-arrow{margin-left:auto;flex-shrink:0;color:var(--muted);transition:color .3s,transform .3s;}
+.channel:hover .channel-arrow{color:var(--neon);transform:translate(3px,-3px);}
+
+/* Divisor */
+.info-divider{
+  margin:2.5rem 0;
+  display:flex;align-items:center;gap:1rem;
+  opacity:0;animation:fade-up .8s var(--ease-out-expo) .9s forwards;
+}
+.info-divider::before,.info-divider::after{
+  content:'';flex:1;height:1px;background:var(--edge);
+}
+.info-divider span{
+  font-family:var(--mono);font-size:.58rem;letter-spacing:2.5px;
+  color:var(--muted);text-transform:uppercase;white-space:nowrap;
+}
+
+/* ============================================================
+   COLUNA DIREITA — formulário
+============================================================ */
+.contact-form-wrap{
+  position:relative;z-index:10;
+  display:flex;flex-direction:column;justify-content:center;
+  /* padding espelhado da coluna esquerda */
+  padding:5rem 8% 5rem 3.5rem;
+  min-height:calc(100svh - 72px);
+}
+
+.form-header{
+  margin-bottom:2.5rem;
+  opacity:0;transform:translateY(14px);
+  animation:fade-up .8s var(--ease-out-expo) .5s forwards;
+}
+.form-header-label{
+  font-family:var(--mono);font-size:.6rem;letter-spacing:3px;
+  color:var(--muted);text-transform:uppercase;margin-bottom:.8rem;
+  display:flex;align-items:center;gap:.6rem;
+}
+.form-header-label::before{content:'';width:20px;height:1px;background:var(--neon);}
+.form-header h2{
+  font-family:var(--display);font-size:2.5rem;font-weight:900;
+  text-transform:uppercase;letter-spacing:-1px;color:var(--bright);line-height:1;
+}
+.form-header h2 .accent{color:var(--neon);}
+
+/* Formulário */
+.contact-form{
+  display:flex;flex-direction:column;gap:1.2rem;
+  opacity:0;transform:translateY(20px);
+  animation:fade-up .9s var(--ease-out-expo) .7s forwards;
+}
+
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:1.2rem;}
+
+.field{display:flex;flex-direction:column;gap:.5rem;}
+.field-label{
+  font-family:var(--mono);font-size:.6rem;letter-spacing:2.5px;
+  color:var(--muted);text-transform:uppercase;
+}
+
+.field input,
+.field textarea,
+.field select{
+  background:var(--surface);
+  border:1px solid var(--edge);
+  color:var(--bright);
+  font-family:var(--mono);font-size:.78rem;letter-spacing:.3px;
+  padding:.85rem 1rem;
+  outline:none;
+  transition:border-color .3s,box-shadow .3s,background .3s;
+  width:100%;
+  cursor:none;
+  /* clip cyber style */
+  clip-path:polygon(0 0,calc(100% - 8px) 0,100% 8px,100% 100%,0 100%);
+  -webkit-appearance:none;appearance:none;
+}
+.field textarea{resize:vertical;min-height:130px;line-height:1.8;}
+.field select option{background:var(--panel);}
+
+.field input::placeholder,
+.field textarea::placeholder{color:var(--muted);}
+
+.field input:focus,
+.field textarea:focus,
+.field select:focus{
+  border-color:rgba(168,85,247,.6);
+  box-shadow:0 0 0 1px rgba(168,85,247,.2),inset 0 0 20px rgba(168,85,247,.03);
+  background:var(--panel);
+}
+
+/* Indicador de preenchimento */
+.field input:not(:placeholder-shown):valid,
+.field textarea:not(:placeholder-shown):valid{
+  border-color:rgba(6,182,212,.4);
+}
+
+/* Botão enviar */
+.btn-send{
+  display:flex;align-items:center;justify-content:center;gap:.75rem;
+  padding:1rem 2rem;
+  background:var(--accent);color:#fff;
+  font-family:var(--display);font-size:.85rem;font-weight:700;
+  letter-spacing:2.5px;text-transform:uppercase;
+  border:none;cursor:none;
+  position:relative;overflow:hidden;
+  clip-path:polygon(0 0,calc(100% - 12px) 0,100% 12px,100% 100%,12px 100%,0 calc(100% - 12px));
+  transition:background .3s,box-shadow .3s;
+  margin-top:.4rem;
+}
+.btn-send::before{
+  content:'';position:absolute;inset:0;
+  background:linear-gradient(135deg,rgba(255,255,255,.15),transparent);
+  opacity:0;transition:opacity .3s;
+}
+.btn-send:hover:not(:disabled){background:var(--neon);box-shadow:0 0 30px rgba(168,85,247,.4);}
+.btn-send:hover:not(:disabled)::before{opacity:1;}
+.btn-send:disabled{opacity:.4;cursor:not-allowed;}
+
+/* Progress bar no botão enquanto envia */
+.btn-send .send-progress{
+  position:absolute;bottom:0;left:0;height:2px;width:0;
+  background:linear-gradient(90deg,var(--cyan),var(--plasma));
+  transition:width 2s linear;
+}
+.btn-send.sending .send-progress{width:90%;}
+
+/* Nota de privacidade */
+.form-privacy{
+  font-family:var(--mono);font-size:.6rem;letter-spacing:.5px;
+  color:var(--muted);line-height:1.8;
+  display:flex;align-items:flex-start;gap:.5rem;
+  margin-top:-.2rem;
+}
+.form-privacy i{flex-shrink:0;margin-top:.1rem;color:var(--muted);}
+
+/* ============================================================
+   MODAL DE SUCESSO
+============================================================ */
+#modal-overlay{
+  position:fixed;inset:0;
+  background:rgba(6,6,10,.92);
+  backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);
+  display:none;align-items:center;justify-content:center;
+  z-index:5000;
+}
+#modal-overlay.visible{display:flex;}
+
+.modal-box{
+  background:var(--surface);
+  border:1px solid rgba(168,85,247,.25);
+  border-top:2px solid var(--neon);
+  padding:3.5rem;
+  max-width:500px;width:90%;
+  text-align:center;
+  position:relative;
+  clip-path:polygon(0 0,calc(100% - 20px) 0,100% 20px,100% 100%,20px 100%,0 calc(100% - 20px));
+  box-shadow:0 0 80px rgba(168,85,247,.12),0 40px 80px rgba(0,0,0,.6);
+  animation:modal-in .5s var(--ease-out-expo) forwards;
+}
+@keyframes modal-in{from{opacity:0;transform:translateY(24px) scale(.97);}to{opacity:1;transform:none;}}
+
+/* Ícone de check animado */
+.modal-check{
+  width:72px;height:72px;border-radius:50%;
+  border:2px solid rgba(168,85,247,.3);
+  display:flex;align-items:center;justify-content:center;
+  margin:0 auto 2rem;
+  position:relative;
+}
+.modal-check::before{
+  content:'';position:absolute;inset:-6px;border-radius:50%;
+  border:1px solid rgba(168,85,247,.15);
+  animation:check-ping 2s ease-out infinite;
+}
+@keyframes check-ping{0%{transform:scale(1);opacity:.5;}100%{transform:scale(1.4);opacity:0;}}
+.modal-check i{color:var(--neon);}
+
+.modal-box h2{
+  font-family:var(--display);font-size:2.2rem;font-weight:900;
+  text-transform:uppercase;letter-spacing:-1px;color:var(--bright);
+  margin-bottom:.8rem;
+}
+.modal-box p{
+  font-family:var(--mono);font-size:.75rem;line-height:2;
+  color:var(--dim);margin-bottom:2.5rem;
+}
+.modal-box p strong{color:var(--bright);font-weight:400;}
+
+.btn-modal-close{
+  display:inline-flex;align-items:center;gap:.5rem;
+  padding:.75rem 2rem;background:var(--accent);color:#fff;
+  font-family:var(--display);font-size:.75rem;font-weight:700;
+  letter-spacing:2px;text-transform:uppercase;
+  border:none;cursor:none;
+  clip-path:polygon(0 0,calc(100% - 8px) 0,100% 8px,100% 100%,8px 100%,0 calc(100% - 8px));
+  transition:background .3s,box-shadow .3s;
+}
+.btn-modal-close:hover{background:var(--neon);box-shadow:0 0 24px rgba(168,85,247,.4);}
+
+/* Canto decorativo do modal */
+.modal-corner{
+  position:absolute;bottom:0;left:0;
+  width:20px;height:20px;
+  border-right:1px solid rgba(168,85,247,.2);
+  border-top:1px solid rgba(168,85,247,.2);
+  pointer-events:none;
+}
+
+/* ============================================================
+   FOOTER
+============================================================ */
+footer{position:relative;z-index:10;border-top:1px solid var(--edge);}
+.footer-ticker{padding:.75rem 5%;border-bottom:1px solid var(--edge);overflow:hidden;white-space:nowrap;background:var(--surface);}
+.ticker-inner{display:inline-block;animation:ticker 30s linear infinite;font-family:var(--mono);font-size:.62rem;letter-spacing:2.5px;color:rgba(124,58,237,.4);text-transform:uppercase;}
+@keyframes ticker{0%{transform:translateX(0);}100%{transform:translateX(-50%);}}
+.footer-main{padding:3rem 5%;display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:2rem;}
+.footer-brand{display:flex;flex-direction:column;gap:.6rem;}
+.footer-copy{font-family:var(--mono);font-size:.62rem;letter-spacing:1px;color:var(--muted);}
+.footer-center{display:flex;flex-direction:column;align-items:center;gap:.5rem;}
+.footer-tagline{font-family:var(--mono);font-size:.6rem;letter-spacing:3px;color:rgba(6,182,212,.45);text-transform:uppercase;}
+.footer-slash{font-family:var(--display);font-size:1.4rem;font-weight:900;color:rgba(6,182,212,.2);letter-spacing:-1px;}
+.footer-links{display:flex;justify-content:flex-end;align-items:center;gap:2rem;list-style:none;}
+.footer-links a{font-family:var(--mono);font-size:.65rem;letter-spacing:1.5px;color:var(--muted);text-decoration:none;text-transform:uppercase;display:flex;align-items:center;gap:.4rem;transition:color .25s;position:relative;}
+.footer-links a::after{content:'';position:absolute;bottom:-2px;left:0;width:0;height:1px;background:var(--neon);box-shadow:0 0 6px var(--neon);transition:width .3s var(--ease-in-out);}
+.footer-links a:hover{color:var(--bright);}
+.footer-links a:hover::after{width:100%;}
+
+/* ============================================================
+   ANIMATIONS
+============================================================ */
+@keyframes fade-up{to{opacity:1;transform:translateY(0);}}
+
+/* ============================================================
+   RESPONSIVE
+============================================================ */
+@media(max-width:1100px){
+  .contact-page{grid-template-columns:1fr;}
+  .contact-info{border-right:none;border-bottom:1px solid var(--edge);padding:5rem 6% 4rem;min-height:auto;}
+  .contact-form-wrap{padding:4rem 6% 5rem;min-height:auto;}
+  .form-row{grid-template-columns:1fr;}
+}
+@media(max-width:600px){
+  header{padding:0 4%;}
+  .contact-info,.contact-form-wrap{padding-left:5%;padding-right:5%;}
+  .contact-title{font-size:3rem;}
+  .nav-primary{gap:1.2rem;}
+  .footer-main{grid-template-columns:1fr;text-align:center;}
+  .footer-links{justify-content:center;}
+  .footer-center{display:none;}
+}
+</style>
+</head>
+<body>
+
+<div class="cursor" id="cursor">
+  <div class="cursor-ring" id="cursorRing"></div>
+  <div class="cursor-dot" id="cursorDot"></div>
+</div>
+<canvas id="bg-canvas"></canvas>
+
+<!-- MODAL SUCESSO -->
+<div id="modal-overlay" role="dialog" aria-modal="true" aria-labelledby="modal-title">
+  <div class="modal-box">
+    <div class="modal-check">
+      <i data-lucide="check" width="32" height="32"></i>
+    </div>
+    <h2 id="modal-title">Mensagem<br>Recebida</h2>
+    <p>
+      Obrigado pelo contato. Nossa equipe analisará sua mensagem e
+      <strong>entrará em contato em breve</strong> para dar continuidade ao seu atendimento.
+    </p>
+    <button class="btn-modal-close" onclick="closeModal()">
+      <i data-lucide="arrow-left" width="14" height="14"></i>
+      Voltar ao site
+    </button>
+    <div class="modal-corner"></div>
+  </div>
+</div>
+
+<!-- HEADER -->
+<header>
+  <a href="index.html" class="logo-wrap" aria-label="CyTracks — Início">
+    <img src="https://i.imgur.com/VC5Re3G.png" alt="CyTracks" id="mainLogo">
+    <span class="logo-tag">v2.6</span>
+  </a>
+  <nav>
+    <ul class="nav-primary">
+      <li class="nav-item"><a href="index.html"     class="nav-link"><span>Início</span></a></li>
+      <li class="nav-item"><a href="quemsomos.html" class="nav-link"><span>Quem Somos</span></a></li>
+      <li class="nav-item has-drop">
+        <span class="drop-label">
+          <span>Parceiros</span>
+          <i data-lucide="chevron-down" width="14" height="14" class="drop-arrow" aria-hidden="true"></i>
+        </span>
+        <div class="drop-panel">
+          <a href="abnormal.html" class="drop-item">Abnormal IA</a>
+          <a href="semperis.html" class="drop-item">Semperis</a>
+          <a href="safetica.html" class="drop-item">Safetica</a>
+        </div>
+      </li>
+      <li class="nav-item"><a href="servicos.html"  class="nav-link"><span>Serviços</span></a></li>
+      <li class="nav-item"><a href="contato.html"   class="nav-link active" aria-current="page"><span>Contato</span></a></li>
+    </ul>
+  </nav>
+</header>
+
+<!-- PÁGINA PRINCIPAL — split layout -->
+<main class="contact-page">
+
+  <!-- ── COLUNA ESQUERDA: info ── -->
+  <div class="contact-info">
+
+    <div class="page-eyebrow">
+      <span class="eyebrow-line"></span>
+      <span>// 05 — Contato</span>
+    </div>
+
+    <h1 class="contact-title">
+      Vamos<br>
+      <span class="outline">Conversar</span><br>
+      <span class="cyan">?</span>
+    </h1>
+
+    <p class="contact-lead">
+      Conte-nos sobre seu ambiente e seus desafios.<br>
+      A primeira conversa é <strong>sem compromisso</strong> —<br>
+      e costuma ser reveladora.
+    </p>
+
+    <div class="info-divider">
+      <span>Canais diretos</span>
+    </div>
+
+    <div class="contact-channels">
+      <a href="https://wa.me/5511983924500" class="channel wpp" target="_blank" rel="noopener noreferrer" aria-label="WhatsApp CyTracks">
+        <div class="channel-icon">
+          <i data-lucide="message-circle" width="18" height="18"></i>
+        </div>
+        <div>
+          <div class="channel-label">WhatsApp</div>
+          <div class="channel-value">(11) 98392-4500</div>
+        </div>
+        <i data-lucide="arrow-up-right" width="16" height="16" class="channel-arrow"></i>
+      </a>
+
+      <a href="mailto:administracao@cytracks.io" class="channel mail" aria-label="E-mail CyTracks">
+        <div class="channel-icon">
+          <i data-lucide="mail" width="18" height="18"></i>
+        </div>
+        <div>
+          <div class="channel-label">E-mail</div>
+          <div class="channel-value">administracao@cytracks.io</div>
+        </div>
+        <i data-lucide="arrow-up-right" width="16" height="16" class="channel-arrow"></i>
+      </a>
+
+      <a href="https://www.linkedin.com/company/cytracks" class="channel linkedin" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn CyTracks">
+        <div class="channel-icon">
+          <i data-lucide="linkedin" width="18" height="18"></i>
+        </div>
+        <div>
+          <div class="channel-label">LinkedIn</div>
+          <div class="channel-value">CyTracks</div>
+        </div>
+        <i data-lucide="arrow-up-right" width="16" height="16" class="channel-arrow"></i>
+      </a>
+    </div>
+
+  </div>
+
+  <!-- ── COLUNA DIREITA: formulário ── -->
+  <div class="contact-form-wrap">
+
+    <div class="form-header">
+      <div class="form-header-label">Formulário de contato</div>
+      <h2>Envie sua<br><span class="accent">mensagem</span></h2>
+    </div>
+
+    <form class="contact-form" id="contactForm" novalidate>
+      <input type="hidden" name="_captcha" value="false">
+      <input type="hidden" name="_subject" value="Novo Lead: Site CyTracks">
+
+      <div class="form-row">
+        <div class="field">
+          <label class="field-label" for="nameField">Nome</label>
+          <input type="text" id="nameField" name="nome" placeholder="Seu nome completo" required autocomplete="name">
+        </div>
+        <div class="field">
+          <label class="field-label" for="companyField">Empresa</label>
+          <input type="text" id="companyField" name="empresa" placeholder="Nome da empresa" autocomplete="organization">
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="field">
+          <label class="field-label" for="emailField">E-mail</label>
+          <input type="email" id="emailField" name="email" placeholder="seu@email.com" required autocomplete="email">
+        </div>
+        <div class="field">
+          <label class="field-label" for="phoneField">Telefone</label>
+          <input type="tel" id="phoneField" name="telefone" placeholder="(11) 99999-9999" autocomplete="tel">
+        </div>
+      </div>
+
+      <div class="field">
+        <label class="field-label" for="serviceField">Serviço de interesse</label>
+        <select id="serviceField" name="servico">
+          <option value="" disabled selected>Selecione um serviço</option>
+          <option value="Serviços Personalizados">Serviços Personalizados</option>
+          <option value="NGFW">NGFW — Next-Gen Firewall</option>
+          <option value="Gestão de Vulnerabilidades">Gestão de Vulnerabilidades</option>
+          <option value="Treinamentos">Treinamentos</option>
+          <option value="Outro / Não sei ainda">Outro / Não sei ainda</option>
+        </select>
+      </div>
+
+      <div class="field">
+        <label class="field-label" for="messageField">Mensagem</label>
+        <textarea id="messageField" name="mensagem" placeholder="Descreva brevemente seu ambiente e o desafio que precisa resolver..." required></textarea>
+      </div>
+
+      <button type="submit" class="btn-send" id="submitBtn">
+        <i data-lucide="send" width="15" height="15"></i>
+        <span id="btnText">Enviar mensagem</span>
+        <div class="send-progress" id="sendProgress"></div>
+      </button>
+
+      <p class="form-privacy">
+        <i data-lucide="lock" width="12" height="12"></i>
+        Suas informações são confidenciais e nunca serão compartilhadas com terceiros.
+      </p>
+    </form>
+
+  </div>
+</main>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-ticker" aria-hidden="true">
+    <span class="ticker-inner" id="tickerInner"></span>
+  </div>
+  <div class="footer-main">
+    <div class="footer-brand">
+      <p class="footer-copy">&copy; 2026 CyTracks Soluções Cibernéticas.<br>Todos os direitos reservados.</p>
+    </div>
+    <div class="footer-center">
+      <div class="footer-slash">CY//</div>
+      <span class="footer-tagline">Inteligência. Proteção. Resultado.</span>
+    </div>
+    <ul class="footer-links">
+      <li><a href="privacidade.html">Aviso de Privacidade</a></li>
+      <li>
+        <a href="https://www.linkedin.com/company/cytracks" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn">
+          <i data-lucide="linkedin" width="14" height="14"></i>LinkedIn
+        </a>
+      </li>
+    </ul>
+  </div>
+</footer>
+
+<script>
+lucide.createIcons();
+
+/* ── CURSOR ── */
+const cursorDot  = document.getElementById('cursorDot');
+const cursorRing = document.getElementById('cursorRing');
+let mx=0,my=0,rx=0,ry=0;
+document.addEventListener('mousemove',e=>{mx=e.clientX;my=e.clientY;});
+document.querySelectorAll('a,button,[role=button],.channel,.has-drop').forEach(el=>{
+  el.addEventListener('mouseenter',()=>document.body.classList.add('cursor-hover'));
+  el.addEventListener('mouseleave',()=>document.body.classList.remove('cursor-hover'));
+});
+(function animCursor(){
+  rx+=(mx-rx)*.12;ry+=(my-ry)*.12;
+  cursorDot.style.cssText =`left:${mx}px;top:${my}px`;
+  cursorRing.style.cssText=`left:${rx}px;top:${ry}px`;
+  requestAnimationFrame(animCursor);
+})();
+
+/* ── CANVAS PARTÍCULAS ── */
+const canvas=document.getElementById('bg-canvas'),ctx=canvas.getContext('2d');
+let W,H,particles=[];
+function resize(){W=canvas.width=window.innerWidth;H=canvas.height=window.innerHeight;}
+resize();window.addEventListener('resize',resize);
+class Particle{
+  constructor(){this.reset();}
+  reset(){this.x=Math.random()*W;this.y=Math.random()*H;this.vx=(Math.random()-.5)*.25;this.vy=(Math.random()-.5)*.25;this.r=Math.random()*1.1+.3;this.a=Math.random()*.35+.04;this.life=0;this.max=Math.random()*450+200;}
+  update(){this.x+=this.vx;this.y+=this.vy;this.life++;if(this.life>this.max||this.x<0||this.x>W||this.y<0||this.y>H)this.reset();}
+  draw(){const f=Math.min(this.life/60,1)*Math.min((this.max-this.life)/60,1);ctx.beginPath();ctx.arc(this.x,this.y,this.r,0,Math.PI*2);ctx.fillStyle=`rgba(124,58,237,${this.a*f})`;ctx.fill();}
+}
+function drawLines(){for(let i=0;i<particles.length;i++)for(let j=i+1;j<particles.length;j++){const dx=particles[i].x-particles[j].x,dy=particles[i].y-particles[j].y,d=Math.sqrt(dx*dx+dy*dy);if(d<110){ctx.beginPath();ctx.moveTo(particles[i].x,particles[i].y);ctx.lineTo(particles[j].x,particles[j].y);ctx.strokeStyle=`rgba(124,58,237,${.05*(1-d/110)})`;ctx.lineWidth=.5;ctx.stroke();}}}
+for(let i=0;i<80;i++)particles.push(new Particle());
+(function animP(){ctx.clearRect(0,0,W,H);drawLines();particles.forEach(p=>{p.update();p.draw();});requestAnimationFrame(animP);})();
+
+/* ── GLITCH LOGO ── */
+const logo=document.getElementById('mainLogo');
+function glitchLogo(){const f=['clip-path:inset(30% 0 50% 0);transform:translateX(-3px)','clip-path:inset(60% 0 20% 0);transform:translateX(3px)','clip-path:inset(10% 0 70% 0);transform:translateX(-2px)','clip-path:none;transform:none'];let i=0;const iv=setInterval(()=>{logo.style.cssText=f[i++];if(i>=f.length){clearInterval(iv);logo.style.cssText='';}},60);}
+setTimeout(glitchLogo,500);
+
+/* ── SCRAMBLE ── */
+const CHARS='ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789#\$%@!';
+function scramble(el){const orig=el.dataset.orig||el.textContent.trim();el.dataset.orig=orig;let i=0;const tot=orig.length*2.5;clearInterval(el._iv);el._iv=setInterval(()=>{el.textContent=orig.split('').map((c,idx)=>{if(c===' ')return ' ';if(idx<i/2.5)return c;return CHARS[Math.floor(Math.random()*CHARS.length)];}).join('');i++;if(i>=tot){clearInterval(el._iv);el.textContent=orig;}},28);}
+function restore(el){clearInterval(el._iv);el.textContent=el.dataset.orig||el.textContent;}
+document.querySelectorAll('.nav-link span,.drop-item').forEach(el=>{el.dataset.orig=el.textContent.trim();el.addEventListener('mouseenter',()=>scramble(el));el.addEventListener('mouseleave',()=>restore(el));});
+document.querySelectorAll('.drop-label').forEach(dl=>{const tn=[...dl.childNodes].find(n=>n.nodeType===3&&n.textContent.trim());if(!tn)return;const s=document.createElement('span');s.textContent=tn.textContent.trim();s.dataset.orig=s.textContent;tn.replaceWith(s);dl.addEventListener('mouseenter',()=>scramble(s));dl.addEventListener('mouseleave',()=>restore(s));});
+
+/* ── MODAL ── */
+const modalOverlay = document.getElementById('modal-overlay');
+function closeModal(){
+  modalOverlay.classList.remove('visible');
+  document.body.style.overflow='';
+}
+modalOverlay.addEventListener('click', e => { if(e.target===modalOverlay) closeModal(); });
+document.addEventListener('keydown', e => { if(e.key==='Escape') closeModal(); });
+
+/* ── FORMULÁRIO ── */
+const contactForm = document.getElementById('contactForm');
+const submitBtn   = document.getElementById('submitBtn');
+const btnText     = document.getElementById('btnText');
+const sendProgress= document.getElementById('sendProgress');
+
+contactForm.addEventListener('submit', function(e){
+  e.preventDefault();
+
+  /* Validação simples */
+  const nome  = document.getElementById('nameField').value.trim();
+  const email = document.getElementById('emailField').value.trim();
+  const msg   = document.getElementById('messageField').value.trim();
+  if(!nome||!email||!msg) return;
+
+  /* Estado de envio */
+  submitBtn.disabled = true;
+  submitBtn.classList.add('sending');
+  btnText.textContent = 'Enviando...';
+
+  const formData = new FormData(this);
+  const data = {};
+  formData.forEach((v,k)=>data[k]=v);
+
+  fetch('https://formsubmit.co/ajax/administracao@cytracks.io', {
+    method:'POST',
+    headers:{'Content-Type':'application/json','Accept':'application/json'},
+    body:JSON.stringify(data)
+  })
+  .then(r=>r.json())
+  .then(()=>{
+    /* Sucesso */
+    modalOverlay.classList.add('visible');
+    document.body.style.overflow='hidden';
+    contactForm.reset();
+    clearPersistence();
+  })
+  .catch(()=>{
+    alert('Ocorreu um erro ao enviar. Por favor, tente pelo WhatsApp: (11) 98392-4500');
+  })
+  .finally(()=>{
+    submitBtn.disabled=false;
+    submitBtn.classList.remove('sending');
+    btnText.textContent='Enviar mensagem';
+  });
+});
+
+/* ── PERSISTÊNCIA DOS CAMPOS ── */
+const persistFields = ['nameField','companyField','emailField','phoneField','messageField'];
+function clearPersistence(){ persistFields.forEach(id=>sessionStorage.removeItem(id)); }
+window.addEventListener('load',()=>{
+  persistFields.forEach(id=>{
+    const el=document.getElementById(id);
+    if(!el)return;
+    const saved=sessionStorage.getItem(id);
+    if(saved)el.value=saved;
+    el.addEventListener('input',ev=>sessionStorage.setItem(id,ev.target.value));
+  });
+});
+
+/* ── TICKER ── */
+const segs=[
+  'CyTracks Soluções Cibernéticas','Fale com Especialistas',
+  'Zero Trust Architecture','Defesa em Profundidade',
+  'Parceiro Abnormal IA','Parceiro Semperis','Parceiro Safetica',
+  'Proteção de Identidade','Segurança de Email com IA',
+  'Prevenção de Perda de Dados','Consultoria Estratégica em Cyber',
+];
+const tickerEl=document.getElementById('tickerInner');
+const txt=segs.map(s=>'   //   '+s).join('');
+tickerEl.textContent=txt+txt;
+</script>
+</body>
+</html>
