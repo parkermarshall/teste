@@ -1,0 +1,868 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Abnormal AI — Parceiro CyTracks</title>
+<link rel="icon" type="image/png" href="https://i.imgur.com/ISlc727.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600;9..40,700&family=DM+Mono:wght@300;400;500&family=Barlow+Condensed:wght@600;700;900&display=swap" rel="stylesheet">
+<script src="https://unpkg.com/lucide@latest"></script>
+<style>
+:root{
+  --ab-void:#030508;--ab-deep:#07080f;--ab-card:#0d0f1a;--ab-border:rgba(255,255,255,0.06);
+  --ab-purple:#d3ec54;--ab-violet:#b8d43a;--ab-grape:#d3ec54;--ab-lavender:#e8f580;
+  --ab-glow:rgba(211,236,84,0.4);--ab-glow-sm:rgba(211,236,84,0.12);
+  --ab-white:#f8fafc;--ab-dim:#94a3b8;--ab-muted:#475569;
+  --neon:#d3ec54;--plasma:#e8f580;--edge:rgba(255,255,255,0.06);--muted:#52526b;
+  --display:"Barlow Condensed",sans-serif;--mono:"DM Mono",monospace;--body:"DM Sans",sans-serif;
+  --ease-out-expo:cubic-bezier(0.19,1,0.22,1);--ease-in-out:cubic-bezier(0.77,0,0.175,1);
+}
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+body{background:var(--ab-void);color:var(--ab-white);font-family:var(--body);overflow-x:hidden;min-height:100vh;cursor:none;}
+.cursor{position:fixed;pointer-events:none;z-index:9999;mix-blend-mode:difference;}
+.cursor-dot{width:6px;height:6px;background:#fff;border-radius:50%;transform:translate(-50%,-50%);}
+.cursor-ring{width:32px;height:32px;border:1px solid rgba(211,236,84,.7);border-radius:50%;transform:translate(-50%,-50%);transition:width .3s var(--ease-out-expo),height .3s var(--ease-out-expo),border-color .3s;}
+body.cursor-hover .cursor-ring{width:52px;height:52px;border-color:var(--ab-grape);}
+body::before{content:"";position:fixed;inset:0;pointer-events:none;z-index:9990;opacity:.025;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");background-size:180px;}
+#bg-canvas{position:fixed;inset:0;z-index:0;pointer-events:none;}
+
+/* HEADER */
+header{position:fixed;top:0;left:0;width:100%;z-index:1000;padding:0 5%;height:72px;display:flex;align-items:center;justify-content:space-between;background:rgba(3,5,8,.88);backdrop-filter:blur(24px);-webkit-backdrop-filter:blur(24px);border-bottom:1px solid var(--ab-border);}
+header::after{content:"";position:absolute;bottom:-1px;left:-100%;width:35%;height:1px;background:linear-gradient(90deg,transparent,var(--ab-purple),var(--ab-grape),transparent);animation:h-scan 5s ease-in-out infinite 1s;pointer-events:none;}
+@keyframes h-scan{0%{left:-35%;opacity:0;}5%{opacity:1;}95%{opacity:1;}100%{left:135%;opacity:0;}}
+.logo-wrap{display:flex;align-items:center;gap:.75rem;text-decoration:none;}
+.logo-wrap img{height:36px;display:block;}
+.logo-tag{font-family:var(--mono);font-size:.6rem;color:var(--neon);letter-spacing:2px;text-transform:uppercase;padding:2px 6px;border:1px solid rgba(211,236,84,.3);line-height:1.6;}
+.nav-primary{display:flex;align-items:center;gap:2.5rem;height:100%;list-style:none;}
+.nav-item{position:relative;height:100%;display:flex;align-items:center;}
+.nav-link{font-family:var(--display);font-size:.72rem;font-weight:600;letter-spacing:2.5px;text-transform:uppercase;color:var(--muted);text-decoration:none;padding:.4rem 0;position:relative;overflow:hidden;transition:color .2s;}
+.nav-link::after{content:"";position:absolute;bottom:0;left:0;width:0;height:1px;background:linear-gradient(90deg,var(--ab-purple),var(--ab-grape));box-shadow:0 0 8px var(--ab-purple);transition:width .4s var(--ease-in-out);}
+.nav-link:hover,.nav-link.active{color:var(--ab-white);}
+.nav-link:hover::after,.nav-link.active::after{width:100%;}
+.has-drop{cursor:pointer;}
+.drop-label{font-family:var(--display);font-size:.72rem;font-weight:600;letter-spacing:2.5px;text-transform:uppercase;color:var(--muted);display:flex;align-items:center;gap:.4rem;transition:color .2s;position:relative;}
+.drop-label::after{content:"";position:absolute;bottom:-4px;left:0;width:0;height:1px;background:linear-gradient(90deg,var(--ab-purple),var(--ab-grape));transition:width .4s var(--ease-in-out);}
+.has-drop:hover .drop-label{color:var(--ab-white);}
+.has-drop:hover .drop-label::after{width:100%;}
+.drop-arrow{transition:transform .35s var(--ease-in-out);}
+.has-drop:hover .drop-arrow{transform:rotate(180deg);color:var(--ab-grape);}
+.drop-panel{position:absolute;top:calc(100% + 1px);left:-16px;min-width:220px;background:rgba(7,8,15,.98);border:1px solid rgba(211,236,84,.2);border-top:2px solid var(--ab-purple);padding:.5rem 0;opacity:0;visibility:hidden;transform:translateY(8px);transition:all .3s var(--ease-out-expo);clip-path:polygon(0 0,calc(100% - 12px) 0,100% 12px,100% 100%,12px 100%,0 calc(100% - 12px));box-shadow:0 20px 60px rgba(0,0,0,.7);}
+.has-drop:hover .drop-panel{opacity:1;visibility:visible;transform:translateY(0);}
+.drop-item{display:flex;align-items:center;gap:.6rem;padding:.65rem 1.2rem;color:var(--ab-dim);text-decoration:none;font-size:.72rem;font-weight:600;letter-spacing:1.8px;text-transform:uppercase;font-family:var(--display);transition:color .2s,padding-left .2s;position:relative;}
+.drop-item::before{content:"//";font-family:var(--mono);font-size:.6rem;color:var(--ab-grape);opacity:0;transform:translateX(-8px);transition:opacity .2s,transform .2s;}
+.drop-item:hover,.drop-item.is-active{color:var(--ab-white);padding-left:1.6rem;}
+.drop-item:hover::before,.drop-item.is-active::before{opacity:1;transform:translateX(0);}
+
+/* INTRO BAR */
+.partner-intro{position:relative;z-index:10;margin-top:72px;padding:2rem 5%;display:flex;align-items:center;justify-content:space-between;gap:2rem;border-bottom:1px solid var(--ab-border);background:var(--ab-deep);flex-wrap:wrap;}
+.partner-breadcrumb{display:flex;align-items:center;gap:.6rem;font-family:var(--mono);font-size:.6rem;letter-spacing:2px;color:var(--ab-muted);text-transform:uppercase;}
+.partner-breadcrumb a{color:var(--ab-muted);text-decoration:none;transition:color .2s;}
+.partner-breadcrumb a:hover{color:var(--ab-white);}
+.partner-breadcrumb em{color:var(--ab-grape);font-style:normal;}
+.partner-badge{display:flex;align-items:center;gap:.55rem;padding:.35rem .9rem;border:1px solid rgba(211,236,84,.3);background:rgba(211,236,84,.07);font-family:var(--mono);font-size:.58rem;letter-spacing:2px;color:var(--ab-lavender);text-transform:uppercase;}
+.badge-dot{width:6px;height:6px;border-radius:50%;background:var(--ab-purple);box-shadow:0 0 10px rgba(211,236,84,.6);animation:pulse-dot 2s ease-in-out infinite;}
+@keyframes pulse-dot{0%,100%{transform:scale(1);opacity:1;}50%{transform:scale(.7);opacity:.5;}}
+
+/* ── HERO CUSTOM ── */
+.ab-hero{
+  position:relative;z-index:10;
+  min-height:100svh;
+  display:grid;grid-template-columns:1fr 1fr;
+  align-items:center;
+  padding:0 6%;gap:4rem;
+  overflow:hidden;
+  border-bottom:1px solid var(--ab-border);
+}
+/* Grade sutil de fundo */
+.ab-hero::before{
+  content:"";position:absolute;inset:0;pointer-events:none;
+  background-image:
+    linear-gradient(rgba(211,236,84,.04) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(211,236,84,.04) 1px,transparent 1px);
+  background-size:56px 56px;
+  mask-image:radial-gradient(ellipse 100% 100% at 60% 50%,black 20%,transparent 80%);
+}
+/* Glow radial centralizado */
+.ab-hero::after{
+  content:"";position:absolute;
+  right:-10%;top:50%;transform:translateY(-50%);
+  width:620px;height:620px;border-radius:50%;
+  background:radial-gradient(circle,rgba(211,236,84,.18) 0%,rgba(211,236,84,.06) 40%,transparent 70%);
+  pointer-events:none;
+}
+.ab-hero-content{position:relative;z-index:2;}
+@keyframes fade-up{to{opacity:1;transform:none;}}
+.ab-wordmark{display:inline-block;font-family:var(--mono);font-size:.7rem;font-weight:500;letter-spacing:4px;text-transform:uppercase;color:var(--ab-lavender);margin-bottom:1.4rem;opacity:.85;}
+.ab-hero-title{font-family:var(--body);font-weight:700;font-size:clamp(2.4rem,4.2vw,4.8rem);line-height:1.04;letter-spacing:-.03em;color:var(--ab-white);margin-bottom:1.3rem;opacity:0;transform:translateY(20px);animation:fade-up .9s var(--ease-out-expo) .25s forwards;}
+.ab-hero-title em{font-style:normal;background:linear-gradient(135deg,#e8f580 0%,#b8d43a 50%,#d3ec54 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
+.ab-hero-sub{font-family:var(--body);font-size:1rem;font-weight:400;line-height:1.75;color:var(--ab-dim);margin-bottom:2rem;max-width:440px;opacity:0;transform:translateY(14px);animation:fade-up .8s var(--ease-out-expo) .45s forwards;}
+.ab-wordmark{opacity:0;transform:translateY(14px);animation:fade-up .7s var(--ease-out-expo) .1s forwards;}
+.ab-hero-btns{display:flex;gap:.8rem;flex-wrap:wrap;opacity:0;transform:translateY(14px);animation:fade-up .8s var(--ease-out-expo) .6s forwards;}
+.btn-ab{display:inline-flex;align-items:center;gap:.5rem;padding:.75rem 1.6rem;font-family:var(--body);font-size:.875rem;font-weight:600;letter-spacing:.01em;text-decoration:none;cursor:none;transition:all .25s;}
+.btn-ab-solid{background:var(--ab-purple);color:#0a0f00;border:1px solid var(--ab-purple);font-weight:700;}
+.btn-ab-solid:hover{background:var(--ab-violet);box-shadow:0 0 32px var(--ab-glow);}
+.btn-ab-ghost{background:transparent;color:var(--ab-dim);border:1px solid var(--ab-border);}
+.btn-ab-ghost:hover{color:var(--ab-white);border-color:rgba(211,236,84,.4);}
+
+/* ── HERO VISUAL: SVG email-threat orbit ── */
+.ab-hero-visual{
+  position:relative;z-index:2;
+  display:flex;align-items:center;justify-content:center;
+  opacity:0;transform:scale(.94);
+  animation:hero-vis-in 1.1s var(--ease-out-expo) .4s forwards;
+}
+@keyframes hero-vis-in{to{opacity:1;transform:scale(1);}}
+.hero-svg-wrap{position:relative;width:520px;height:520px;max-width:100%;}
+#hero-svg{width:100%;height:100%;}
+
+/* ── DEMO SECTION (substituiu solution-banner) ── */
+.demo-section{
+  position:relative;z-index:10;
+  padding:7rem 6%;
+  border-top:1px solid var(--ab-border);
+  border-bottom:1px solid var(--ab-border);
+  background:var(--ab-deep);
+  overflow:hidden;
+}
+/* Glow de fundo da seção de demo */
+.demo-section::before{
+  content:"";position:absolute;
+  top:-30%;right:-10%;
+  width:600px;height:600px;border-radius:50%;
+  background:radial-gradient(circle,rgba(211,236,84,.1) 0%,transparent 65%);
+  pointer-events:none;
+}
+.demo-inner{
+  display:grid;grid-template-columns:1fr 1fr;
+  gap:5rem;align-items:start;
+  max-width:1280px;margin:0 auto;
+}
+.demo-left{}
+.demo-eyebrow{font-family:var(--mono);font-size:.62rem;letter-spacing:3px;color:var(--ab-purple);text-transform:uppercase;margin-bottom:.9rem;display:flex;align-items:center;gap:.5rem;}
+.demo-eyebrow::before{content:"//";color:var(--ab-grape);}
+.demo-title{font-family:var(--body);font-weight:700;font-size:clamp(2rem,3.2vw,3rem);letter-spacing:-.03em;line-height:1.1;color:var(--ab-white);margin-bottom:1rem;}
+.demo-title em{font-style:normal;background:linear-gradient(135deg,#e8f580,#b8d43a);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
+.demo-sub{font-family:var(--body);font-size:.95rem;line-height:1.8;color:var(--ab-dim);margin-bottom:2rem;max-width:420px;}
+.demo-cta-main{
+  display:inline-flex;align-items:center;gap:.7rem;
+  padding:1rem 2rem;
+  background:var(--ab-purple);color:#0a0f00;
+  font-family:var(--body);font-size:.95rem;font-weight:700;
+  letter-spacing:.01em;text-decoration:none;cursor:none;
+  transition:background .25s,box-shadow .25s;
+  position:relative;overflow:hidden;
+}
+.demo-cta-main::before{
+  content:"";position:absolute;inset:0;
+  background:linear-gradient(90deg,transparent,rgba(255,255,255,.08),transparent);
+  transform:translateX(-100%);transition:transform .5s;
+}
+.demo-cta-main:hover{background:var(--ab-violet);box-shadow:0 0 40px var(--ab-glow);}
+.demo-cta-main:hover::before{transform:translateX(100%);}
+.demo-cta-note{font-family:var(--mono);font-size:.58rem;letter-spacing:2px;color:var(--ab-muted);text-transform:uppercase;margin-top:.75rem;display:flex;align-items:center;gap:.4rem;}
+.demo-cta-note i{color:var(--ab-grape);}
+
+/* Tours grid */
+.demo-tours{}
+.tours-label{font-family:var(--mono);font-size:.6rem;letter-spacing:2.5px;color:var(--ab-muted);text-transform:uppercase;margin-bottom:1rem;}
+.tours-grid{display:flex;flex-direction:column;gap:2px;}
+.tour-card{
+  display:flex;align-items:center;gap:1rem;
+  padding:1rem 1.2rem;
+  background:var(--ab-card);
+  border:1px solid var(--ab-border);
+  border-left:2px solid transparent;
+  text-decoration:none;cursor:none;
+  transition:background .2s,border-left-color .2s,transform .2s;
+  position:relative;overflow:hidden;
+}
+.tour-card::after{
+  content:"";position:absolute;inset:0;
+  background:linear-gradient(90deg,rgba(211,236,84,.04),transparent);
+  opacity:0;transition:opacity .2s;
+}
+.tour-card:hover{background:rgba(211,236,84,.08);border-left-color:var(--ab-grape);transform:translateX(3px);}
+.tour-card:hover::after{opacity:1;}
+.tour-icon{
+  flex-shrink:0;width:36px;height:36px;
+  display:flex;align-items:center;justify-content:center;
+  border:1px solid rgba(211,236,84,.2);
+  background:rgba(211,236,84,.06);
+  color:var(--ab-grape);
+  transition:border-color .2s,box-shadow .2s;
+}
+.tour-card:hover .tour-icon{border-color:rgba(211,236,84,.5);box-shadow:0 0 14px rgba(211,236,84,.2);}
+.tour-body{flex:1;}
+.tour-title{font-family:var(--body);font-size:.88rem;font-weight:600;color:var(--ab-white);margin-bottom:.15rem;transition:color .2s;}
+.tour-desc{font-family:var(--body);font-size:.75rem;line-height:1.6;color:var(--ab-muted);}
+.tour-arrow{flex-shrink:0;color:var(--ab-muted);transition:color .2s,transform .2s;}
+.tour-card:hover .tour-arrow{color:var(--ab-grape);transform:translateX(4px);}
+.tour-tag{
+  display:inline-flex;align-items:center;
+  font-family:var(--mono);font-size:.52rem;letter-spacing:1.5px;
+  text-transform:uppercase;padding:.2rem .5rem;margin-top:.3rem;
+}
+.tag-overview{color:#22c55e;background:rgba(34,197,94,.07);border:1px solid rgba(34,197,94,.2);}
+.tag-attack{color:#ef4444;background:rgba(239,68,68,.07);border:1px solid rgba(239,68,68,.2);}
+.tag-product{color:var(--ab-lavender);background:rgba(232,245,128,.07);border:1px solid rgba(232,245,128,.2);}
+.tours-all{
+  display:flex;align-items:center;justify-content:center;gap:.5rem;
+  margin-top:1.2rem;
+  padding:.75rem;
+  background:transparent;
+  border:1px solid var(--ab-border);
+  font-family:var(--mono);font-size:.6rem;letter-spacing:2px;
+  text-transform:uppercase;color:var(--ab-muted);text-decoration:none;cursor:none;
+  transition:color .2s,border-color .2s;
+}
+.tours-all:hover{color:var(--ab-white);border-color:rgba(211,236,84,.4);}
+
+/* Solution banner removido — era imagem, agora é demo-section */
+.solution-banner{display:none;}
+.solution-overlay{display:none;}
+
+/* STATS BAR */
+.stats-bar{position:relative;z-index:10;display:grid;grid-template-columns:repeat(4,1fr);border-top:1px solid var(--ab-border);border-bottom:1px solid var(--ab-border);background:var(--ab-deep);}
+.stat-cell{padding:2.5rem 2rem;border-right:1px solid var(--ab-border);position:relative;overflow:hidden;transition:background .3s;}
+.stat-cell:last-child{border-right:none;}
+.stat-cell:hover{background:var(--ab-card);}
+.stat-cell::after{content:"";position:absolute;bottom:0;left:0;width:0;height:2px;background:linear-gradient(90deg,var(--ab-purple),var(--ab-grape));transition:width .5s var(--ease-out-expo);}
+.stat-cell:hover::after{width:100%;}
+.stat-n{font-family:var(--body);font-weight:700;font-size:clamp(1.8rem,3vw,2.8rem);letter-spacing:-.04em;color:var(--ab-white);line-height:1;margin-bottom:.35rem;}
+.stat-n b{color:var(--ab-grape);font-weight:700;}
+.stat-d{font-family:var(--mono);font-size:.62rem;letter-spacing:1.5px;color:var(--ab-muted);text-transform:uppercase;line-height:1.6;}
+
+/* SECTIONS */
+.section{position:relative;z-index:10;padding:6.5rem 6%;}
+.section-label{font-family:var(--mono);font-size:.62rem;letter-spacing:3px;color:var(--ab-purple);text-transform:uppercase;margin-bottom:.9rem;}
+.section-title{font-family:var(--body);font-weight:700;font-size:clamp(1.9rem,3.2vw,3rem);letter-spacing:-.03em;line-height:1.1;color:var(--ab-white);margin-bottom:1.1rem;}
+.section-title em{font-style:normal;background:linear-gradient(135deg,#e8f580,#b8d43a);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
+.section-sub{font-family:var(--body);font-size:.95rem;line-height:1.8;color:var(--ab-dim);max-width:500px;}
+
+/* WHY SECTION */
+.why-section{background:var(--ab-deep);border-top:1px solid var(--ab-border);border-bottom:1px solid var(--ab-border);}
+.why-grid{display:grid;grid-template-columns:1fr 1fr;gap:6rem;align-items:center;}
+.why-points{display:flex;flex-direction:column;gap:0;margin-top:2rem;}
+.why-point{display:flex;align-items:flex-start;gap:1.1rem;padding:1.5rem 0;border-bottom:1px solid var(--ab-border);}
+.why-point:last-child{border-bottom:none;}
+.wp-icon{flex-shrink:0;width:38px;height:38px;display:flex;align-items:center;justify-content:center;border:1px solid rgba(211,236,84,.18);background:rgba(211,236,84,.05);color:var(--ab-grape);transition:border-color .3s,box-shadow .3s;}
+.why-point:hover .wp-icon{border-color:rgba(211,236,84,.45);box-shadow:0 0 18px rgba(211,236,84,.18);}
+.wp-title{font-family:var(--body);font-size:.95rem;font-weight:600;color:var(--ab-white);margin-bottom:.25rem;}
+.wp-desc{font-family:var(--body);font-size:.85rem;line-height:1.7;color:var(--ab-dim);}
+.why-visual{position:relative;}
+.why-banner{width:100%;border-radius:2px;display:block;box-shadow:0 0 60px rgba(211,236,84,.13),0 40px 80px rgba(0,0,0,.5);border:1px solid var(--ab-border);}
+
+/* HOW STEPS */
+.how-section{border-top:1px solid var(--ab-border);}
+.how-steps{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--ab-border);margin-top:3.5rem;}
+.how-step{background:var(--ab-deep);padding:2.8rem 2.2rem;position:relative;overflow:hidden;transition:background .3s;}
+.how-step:hover{background:var(--ab-card);}
+.how-step::before{content:"";position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,var(--ab-purple),transparent);transform:scaleX(0);transform-origin:left;transition:transform .6s var(--ease-out-expo);}
+.how-step:hover::before{transform:scaleX(1);}
+.hs-num{font-family:var(--mono);font-size:.58rem;letter-spacing:3px;color:var(--ab-purple);text-transform:uppercase;margin-bottom:1.3rem;}
+.hs-icon{width:44px;height:44px;display:flex;align-items:center;justify-content:center;border:1px solid rgba(211,236,84,.18);background:rgba(211,236,84,.05);color:var(--ab-grape);margin-bottom:1.3rem;transition:border-color .3s,box-shadow .3s;}
+.how-step:hover .hs-icon{border-color:rgba(211,236,84,.45);box-shadow:0 0 22px rgba(211,236,84,.16);}
+.hs-title{font-family:var(--body);font-size:1.05rem;font-weight:600;color:var(--ab-white);margin-bottom:.5rem;}
+.hs-body{font-family:var(--body);font-size:.85rem;line-height:1.75;color:var(--ab-dim);}
+
+/* SOLUTION BANNER */
+.solution-banner{position:relative;z-index:10;border-top:1px solid var(--ab-border);border-bottom:1px solid var(--ab-border);}
+.solution-banner img{width:100%;height:auto;display:block;}
+.solution-overlay{position:absolute;inset:0;background:linear-gradient(to left,rgba(3,5,8,.92) 0%,rgba(3,5,8,.65) 38%,rgba(3,5,8,.1) 65%,transparent 100%);display:flex;align-items:center;justify-content:flex-end;padding:0 6%;}
+.solution-text{max-width:460px;text-align:right;}
+.solution-text .section-label{text-align:right;}
+.solution-title{font-family:var(--body);font-weight:700;font-size:clamp(1.9rem,3.2vw,3.3rem);letter-spacing:-.03em;line-height:1.1;color:var(--ab-white);margin-bottom:.9rem;}
+.solution-title em{font-style:normal;background:linear-gradient(135deg,#e8f580,#b8d43a);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
+.solution-sub{font-family:var(--body);font-size:.9rem;line-height:1.75;color:var(--ab-dim);margin-bottom:1.6rem;}
+
+/* CAPS */
+.caps-section{border-top:1px solid var(--ab-border);background:var(--ab-deep);}
+.caps-intro{max-width:580px;margin-bottom:3.5rem;}
+.caps-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--ab-border);}
+.cap{background:var(--ab-deep);padding:2.2rem 1.8rem;position:relative;overflow:hidden;cursor:none;transition:background .3s;}
+.cap:hover{background:var(--ab-card);}
+.cap::after{content:"";position:absolute;bottom:0;left:0;width:0;height:1px;background:linear-gradient(90deg,var(--ab-purple),var(--ab-grape));transition:width .5s var(--ease-out-expo);}
+.cap:hover::after{width:100%;}
+.cap-icon{width:38px;height:38px;display:flex;align-items:center;justify-content:center;border:1px solid rgba(211,236,84,.18);background:rgba(211,236,84,.05);color:var(--ab-grape);margin-bottom:1.2rem;transition:border-color .3s,box-shadow .3s;}
+.cap:hover .cap-icon{border-color:rgba(211,236,84,.45);box-shadow:0 0 18px rgba(211,236,84,.14);}
+.cap-title{font-family:var(--body);font-size:.95rem;font-weight:600;color:var(--ab-white);margin-bottom:.45rem;}
+.cap-body{font-family:var(--body);font-size:.82rem;line-height:1.75;color:var(--ab-dim);}
+
+/* RECOGNITION BAR */
+.recognition-bar{position:relative;z-index:10;padding:2.5rem 5%;background:rgba(211,236,84,.05);border-top:1px solid rgba(211,236,84,.14);border-bottom:1px solid rgba(211,236,84,.14);display:flex;align-items:center;justify-content:space-between;gap:2rem;flex-wrap:wrap;}
+.rec-badge{display:flex;align-items:center;gap:.7rem;padding:.55rem 1.1rem;border:1px solid rgba(211,236,84,.28);background:rgba(211,236,84,.07);}
+.rec-badge i{color:var(--ab-grape);}
+.rec-badge-label{font-family:var(--mono);font-size:.58rem;letter-spacing:2px;color:var(--ab-lavender);text-transform:uppercase;}
+.rec-inner{display:flex;align-items:center;gap:1.5rem;flex-wrap:wrap;flex:1;}
+.rec-desc{font-family:var(--body);font-size:.9rem;color:var(--ab-dim);max-width:560px;}
+.rec-desc strong{color:var(--ab-white);font-weight:600;}
+
+/* PARTNER */
+.partner-section{border-top:1px solid var(--ab-border);}
+.partner-split{display:grid;grid-template-columns:1fr 1fr;gap:5rem;align-items:start;}
+.partner-benefits{display:flex;flex-direction:column;gap:0;margin-top:2rem;}
+.pb-item{display:flex;align-items:flex-start;gap:1rem;padding:1.3rem 0;border-bottom:1px solid var(--ab-border);}
+.pb-item:last-child{border-bottom:none;}
+.pb-icon{flex-shrink:0;color:var(--ab-grape);margin-top:.1rem;}
+.pb-title{font-family:var(--body);font-size:.9rem;font-weight:600;color:var(--ab-white);margin-bottom:.2rem;}
+.pb-desc{font-family:var(--body);font-size:.83rem;line-height:1.7;color:var(--ab-dim);}
+.status-panel{background:var(--ab-card);border:1px solid var(--ab-border);border-top:2px solid var(--ab-purple);overflow:hidden;}
+.sp-header{padding:.9rem 1.3rem;background:rgba(211,236,84,.06);border-bottom:1px solid var(--ab-border);display:flex;align-items:center;justify-content:space-between;}
+.sp-title-label{font-family:var(--mono);font-size:.58rem;letter-spacing:2px;color:var(--ab-muted);text-transform:uppercase;}
+.sp-live{display:flex;align-items:center;gap:.4rem;font-family:var(--mono);font-size:.56rem;letter-spacing:1.5px;color:var(--ab-grape);}
+.sp-dot{width:5px;height:5px;border-radius:50%;background:var(--ab-grape);animation:pulse-dot 1.5s ease-in-out infinite;}
+.sp-rows{display:flex;flex-direction:column;}
+.sp-row{display:flex;align-items:center;gap:1rem;padding:1rem 1.3rem;border-bottom:1px solid var(--ab-border);transition:background .2s;}
+.sp-row:last-child{border-bottom:none;}
+.sp-row:hover{background:rgba(211,236,84,.04);}
+.sp-icon-ok{color:#22c55e;flex-shrink:0;}
+.sp-icon-warn{color:#f59e0b;flex-shrink:0;}
+.sp-icon-block{color:#ef4444;flex-shrink:0;}
+.sp-label{flex:1;font-family:var(--body);font-size:.82rem;color:var(--ab-dim);}
+.sp-value{font-family:var(--mono);font-size:.68rem;letter-spacing:.3px;color:var(--ab-white);}
+.sp-v-ok{color:#22c55e;}.sp-v-warn{color:#f59e0b;}.sp-v-block{color:#ef4444;}
+
+/* CTA */
+.cta-section{position:relative;z-index:10;padding:8rem 5%;border-top:1px solid var(--ab-border);text-align:center;overflow:hidden;}
+.cta-section::before{content:"";position:absolute;bottom:-40%;left:50%;transform:translateX(-50%);width:700px;height:700px;border-radius:50%;background:radial-gradient(circle,rgba(211,236,84,.11) 0%,transparent 70%);pointer-events:none;}
+.cta-eyebrow{font-family:var(--mono);font-size:.62rem;letter-spacing:3px;color:var(--ab-purple);text-transform:uppercase;margin-bottom:1.2rem;}
+.cta-title{font-family:var(--body);font-weight:700;font-size:clamp(2.2rem,5vw,5rem);letter-spacing:-.04em;line-height:1.05;color:var(--ab-white);margin-bottom:1.2rem;}
+.cta-title em{font-style:normal;background:linear-gradient(135deg,#e8f580 0%,#b8d43a 50%,#d3ec54 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
+.cta-sub{font-family:var(--body);font-size:1rem;line-height:1.8;color:var(--ab-dim);max-width:480px;margin:0 auto 2.5rem;}
+.cta-btns{display:flex;gap:1rem;justify-content:center;flex-wrap:wrap;}
+
+/* FOOTER */
+footer{position:relative;z-index:10;border-top:1px solid var(--ab-border);}
+.footer-ticker{padding:.75rem 5%;border-bottom:1px solid var(--ab-border);overflow:hidden;white-space:nowrap;background:var(--ab-deep);}
+.ticker-inner{display:inline-block;animation:ticker 35s linear infinite;font-family:var(--mono);font-size:.6rem;letter-spacing:2.5px;color:rgba(211,236,84,.32);text-transform:uppercase;}
+@keyframes ticker{0%{transform:translateX(0);}100%{transform:translateX(-50%);}}
+.footer-main{padding:3rem 5%;display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:2rem;}
+.footer-copy{font-family:var(--mono);font-size:.62rem;letter-spacing:1px;color:var(--ab-muted);}
+.footer-center{display:flex;flex-direction:column;align-items:center;gap:.5rem;}
+.footer-tagline{font-family:var(--mono);font-size:.58rem;letter-spacing:3px;color:rgba(211,236,84,.38);text-transform:uppercase;}
+.footer-slash{font-family:var(--display);font-size:1.4rem;font-weight:900;color:rgba(211,236,84,.16);letter-spacing:-1px;}
+.footer-links-list{display:flex;justify-content:flex-end;align-items:center;gap:2rem;list-style:none;}
+.footer-links-list a{font-family:var(--mono);font-size:.62rem;letter-spacing:1.5px;color:var(--ab-muted);text-decoration:none;text-transform:uppercase;display:flex;align-items:center;gap:.4rem;transition:color .25s;position:relative;}
+.footer-links-list a::after{content:"";position:absolute;bottom:-2px;left:0;width:0;height:1px;background:var(--ab-grape);transition:width .3s var(--ease-in-out);}
+.footer-links-list a:hover{color:var(--ab-white);}
+.footer-links-list a:hover::after{width:100%;}
+
+.reveal{opacity:0;transform:translateY(24px);transition:opacity .85s var(--ease-out-expo),transform .85s var(--ease-out-expo);}
+.reveal.active{opacity:1;transform:none;}
+.reveal-right{opacity:0;transform:translateX(24px);transition:opacity .85s var(--ease-out-expo),transform .85s var(--ease-out-expo);}
+.reveal-right.active{opacity:1;transform:none;}
+.d1{transition-delay:.08s;}.d2{transition-delay:.18s;}.d3{transition-delay:.28s;}.d4{transition-delay:.38s;}
+
+@media(max-width:1100px){
+  .ab-hero{grid-template-columns:1fr;min-height:auto;padding:7rem 6% 5rem;}
+  .ab-hero-visual{display:none;}
+  .why-grid,.partner-split,.demo-inner{grid-template-columns:1fr;gap:3rem;}
+  .how-steps,.caps-grid{grid-template-columns:1fr 1fr;}
+  .stats-bar{grid-template-columns:1fr 1fr;}
+  .stat-cell{border-bottom:1px solid var(--ab-border);}
+}
+@media(max-width:680px){
+  header{padding:0 4%;}
+  .section,.cta-section,.demo-section{padding-left:5%;padding-right:5%;}
+  .how-steps,.caps-grid{grid-template-columns:1fr;}
+  .stats-bar{grid-template-columns:1fr 1fr;}
+  .nav-primary{gap:1.2rem;}
+  .footer-main{grid-template-columns:1fr;text-align:center;}
+  .footer-links-list{justify-content:center;}
+  .footer-center{display:none;}
+  .recognition-bar{flex-direction:column;align-items:flex-start;}
+  .ab-hero{padding:6rem 5% 4rem;}
+  .ab-hero-title{font-size:2.6rem;}
+}
+</style>
+</head>
+<body>
+
+<div class="cursor" id="cursor">
+  <div class="cursor-ring" id="cursorRing"></div>
+  <div class="cursor-dot" id="cursorDot"></div>
+</div>
+<canvas id="bg-canvas"></canvas>
+
+<header>
+  <a href="index.html" class="logo-wrap">
+    <img src="https://i.imgur.com/VC5Re3G.png" alt="CyTracks" id="mainLogo">
+    <span class="logo-tag">v2.6</span>
+  </a>
+  <nav>
+    <ul class="nav-primary">
+      <li class="nav-item"><a href="index.html" class="nav-link"><span>Início</span></a></li>
+      <li class="nav-item"><a href="quemsomos.html" class="nav-link"><span>Quem Somos</span></a></li>
+      <li class="nav-item has-drop">
+        <span class="drop-label"><span>Parceiros</span><i data-lucide="chevron-down" width="14" height="14" class="drop-arrow"></i></span>
+        <div class="drop-panel">
+          <a href="abnormal.html" class="drop-item is-active">Abnormal AI</a>
+          <a href="semperis.html" class="drop-item">Semperis</a>
+          <a href="safetica.html" class="drop-item">Safetica</a>
+        </div>
+      </li>
+      <li class="nav-item"><a href="servicos.html" class="nav-link"><span>Serviços</span></a></li>
+      <li class="nav-item"><a href="contato.html" class="nav-link"><span>Contato</span></a></li>
+    </ul>
+  </nav>
+</header>
+
+<div class="partner-intro">
+  <div class="partner-breadcrumb">
+    <a href="index.html">CyTracks</a>
+    <i data-lucide="chevron-right" width="11" height="11"></i>
+    <span>Parceiros</span>
+    <i data-lucide="chevron-right" width="11" height="11"></i>
+    <em>Abnormal AI</em>
+  </div>
+  <div class="partner-badge"><span class="badge-dot"></span>Parceiro Oficial no Brasil</div>
+</div>
+
+<section class="ab-hero">
+  <!-- Conteúdo textual -->
+  <div class="ab-hero-content">
+    <div class="ab-wordmark">Abnormal AI — Parceiro CyTracks</div>
+    <h1 class="ab-hero-title">Protect Humans<br>with <em>Behavioral AI</em></h1>
+    <p class="ab-hero-sub">A Abnormal usa inteligência comportamental para detectar ataques de email que ferramentas tradicionais simplesmente não enxergam — sem assinaturas, sem regras, sem ruído.</p>
+    <div class="ab-hero-btns">
+      <a href="contato.html" class="btn-ab btn-ab-solid"><i data-lucide="calendar" width="15" height="15"></i>Agendar Demo</a>
+      <a href="https://abnormal.ai/tours" target="_blank" rel="noopener noreferrer" class="btn-ab btn-ab-ghost"><i data-lucide="play-circle" width="14" height="14"></i>Ver Tours Interativos</a>
+    </div>
+  </div>
+
+  <!-- Visual SVG animado: orbit de emails + escudo AI -->
+  <div class="ab-hero-visual">
+    <div class="hero-svg-wrap">
+      <svg id="hero-svg" viewBox="0 0 520 520" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <radialGradient id="shield-grad" cx="50%" cy="50%" r="50%">
+            <stop offset="0%" stop-color="#b8d43a" stop-opacity=".35"/>
+            <stop offset="100%" stop-color="#d3ec54" stop-opacity="0"/>
+          </radialGradient>
+          <radialGradient id="core-grad" cx="50%" cy="50%" r="50%">
+            <stop offset="0%" stop-color="#e8f580" stop-opacity=".9"/>
+            <stop offset="100%" stop-color="#d3ec54" stop-opacity=".6"/>
+          </radialGradient>
+          <filter id="glow-sm">
+            <feGaussianBlur stdDeviation="3" result="blur"/>
+            <feComposite in="SourceGraphic" in2="blur" operator="over"/>
+          </filter>
+          <filter id="glow-lg">
+            <feGaussianBlur stdDeviation="8" result="blur"/>
+            <feComposite in="SourceGraphic" in2="blur" operator="over"/>
+          </filter>
+          <!-- Clip para envelope -->
+          <clipPath id="env-clip"><rect width="30" height="22" rx="2"/></clipPath>
+        </defs>
+
+        <!-- ── Anéis orbitais ── -->
+        <!-- Orbit 1 -->
+        <circle cx="260" cy="260" r="140" stroke="rgba(211,236,84,.12)" stroke-width="1" stroke-dasharray="4 6"/>
+        <!-- Orbit 2 -->
+        <circle cx="260" cy="260" r="185" stroke="rgba(211,236,84,.07)" stroke-width="1" stroke-dasharray="2 8"/>
+        <!-- Orbit 3 -->
+        <circle cx="260" cy="260" r="230" stroke="rgba(211,236,84,.04)" stroke-width="1"/>
+
+        <!-- ── Glow central ── -->
+        <circle cx="260" cy="260" r="120" fill="url(#shield-grad)"/>
+
+        <!-- ── Escudo central ── -->
+        <!-- Escudo principal -->
+        <path d="M260 155 L320 180 L320 245 C320 285 295 315 260 330 C225 315 200 285 200 245 L200 180 Z"
+              fill="rgba(211,236,84,.12)" stroke="rgba(211,236,84,.45)" stroke-width="1.5"/>
+        <!-- Escudo inner glow -->
+        <path d="M260 170 L310 191 L310 245 C310 278 290 303 260 316 C230 303 210 278 210 245 L210 191 Z"
+              fill="rgba(211,236,84,.06)" stroke="rgba(232,245,128,.3)" stroke-width="1"/>
+
+        <!-- Check mark no escudo -->
+        <polyline points="240,255 255,270 285,240" stroke="#e8f580" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" filter="url(#glow-sm)"/>
+
+        <!-- ── Brain / AI dots no centro ── -->
+        <circle cx="260" cy="242" r="4" fill="#e8f580" filter="url(#glow-sm)">
+          <animate attributeName="opacity" values="1;.3;1" dur="2.2s" repeatCount="indefinite"/>
+        </circle>
+        <circle cx="248" cy="258" r="3" fill="#d3ec54" filter="url(#glow-sm)">
+          <animate attributeName="opacity" values=".4;1;.4" dur="1.8s" repeatCount="indefinite"/>
+        </circle>
+        <circle cx="272" cy="258" r="3" fill="#d3ec54" filter="url(#glow-sm)">
+          <animate attributeName="opacity" values=".6;1;.6" dur="2.5s" repeatCount="indefinite"/>
+        </circle>
+        <!-- Linhas de conexão neural -->
+        <line x1="260" y1="242" x2="248" y2="258" stroke="rgba(232,245,128,.4)" stroke-width="1"/>
+        <line x1="260" y1="242" x2="272" y2="258" stroke="rgba(232,245,128,.4)" stroke-width="1"/>
+        <line x1="248" y1="258" x2="272" y2="258" stroke="rgba(232,245,128,.2)" stroke-width="1"/>
+
+        <!-- ── Emails em órbita 1 (r=140, 3 emails) ── -->
+        <!-- Email 1 — bloqueado (vermelho) — órbita CW -->
+        <g id="email-orbit-1">
+          <animateTransform attributeName="transform" type="rotate" from="0 260 260" to="360 260 260" dur="12s" repeatCount="indefinite"/>
+          <g transform="translate(245,108)">
+            <!-- envelope -->
+            <rect x="0" y="0" width="30" height="22" rx="2" fill="rgba(239,68,68,.15)" stroke="rgba(239,68,68,.7)" stroke-width="1.2"/>
+            <polyline points="0,0 15,12 30,0" fill="none" stroke="rgba(239,68,68,.7)" stroke-width="1.2"/>
+            <!-- x de bloqueado -->
+            <line x1="9" y1="13" x2="21" y2="21" stroke="#ef4444" stroke-width="1.5" stroke-linecap="round"/>
+            <line x1="21" y1="13" x2="9" y2="21" stroke="#ef4444" stroke-width="1.5" stroke-linecap="round"/>
+            <!-- rótulo -->
+            <text x="15" y="30" text-anchor="middle" font-family="DM Mono,monospace" font-size="7" fill="rgba(239,68,68,.8)" letter-spacing="1">BEC</text>
+          </g>
+        </g>
+
+        <!-- Email 2 — phishing (laranja) — mesmo raio, offset 120° -->
+        <g id="email-orbit-2">
+          <animateTransform attributeName="transform" type="rotate" from="120 260 260" to="480 260 260" dur="12s" repeatCount="indefinite"/>
+          <g transform="translate(245,108)">
+            <rect x="0" y="0" width="30" height="22" rx="2" fill="rgba(251,146,60,.1)" stroke="rgba(251,146,60,.6)" stroke-width="1.2"/>
+            <polyline points="0,0 15,12 30,0" fill="none" stroke="rgba(251,146,60,.6)" stroke-width="1.2"/>
+            <text x="15" y="13" text-anchor="middle" font-family="DM Mono,monospace" font-size="8" fill="rgba(251,146,60,.9)">!</text>
+            <text x="15" y="30" text-anchor="middle" font-family="DM Mono,monospace" font-size="7" fill="rgba(251,146,60,.8)" letter-spacing="1">QR</text>
+          </g>
+        </g>
+
+        <!-- Email 3 — safe (verde) — offset 240° -->
+        <g id="email-orbit-3">
+          <animateTransform attributeName="transform" type="rotate" from="240 260 260" to="600 260 260" dur="12s" repeatCount="indefinite"/>
+          <g transform="translate(245,108)">
+            <rect x="0" y="0" width="30" height="22" rx="2" fill="rgba(34,197,94,.08)" stroke="rgba(34,197,94,.5)" stroke-width="1.2"/>
+            <polyline points="0,0 15,12 30,0" fill="none" stroke="rgba(34,197,94,.5)" stroke-width="1.2"/>
+            <polyline points="7,13 12,18 23,8" fill="none" stroke="#22c55e" stroke-width="1.5" stroke-linecap="round"/>
+            <text x="15" y="30" text-anchor="middle" font-family="DM Mono,monospace" font-size="7" fill="rgba(34,197,94,.8)" letter-spacing="1">OK</text>
+          </g>
+        </g>
+
+        <!-- ── Nodes no orbit 2 (r=185) ── -->
+        <!-- Node 1: MFA bypass -->
+        <g>
+          <animateTransform attributeName="transform" type="rotate" from="30 260 260" to="390 260 260" dur="20s" repeatCount="indefinite"/>
+          <circle cx="260" cy="75" r="20" fill="rgba(211,236,84,.1)" stroke="rgba(211,236,84,.4)" stroke-width="1"/>
+          <text x="260" y="72" text-anchor="middle" font-family="DM Mono,monospace" font-size="7.5" fill="#e8f580">MFA</text>
+          <text x="260" y="82" text-anchor="middle" font-family="DM Mono,monospace" font-size="7" fill="rgba(232,245,128,.6)">bypass</text>
+        </g>
+        <!-- Node 2: AI gen -->
+        <g>
+          <animateTransform attributeName="transform" type="rotate" from="150 260 260" to="510 260 260" dur="20s" repeatCount="indefinite"/>
+          <circle cx="260" cy="75" r="20" fill="rgba(211,236,84,.1)" stroke="rgba(211,236,84,.4)" stroke-width="1"/>
+          <text x="260" y="72" text-anchor="middle" font-family="DM Mono,monospace" font-size="7.5" fill="#e8f580">Gen</text>
+          <text x="260" y="82" text-anchor="middle" font-family="DM Mono,monospace" font-size="7" fill="rgba(232,245,128,.6)">AI</text>
+        </g>
+        <!-- Node 3: VEC -->
+        <g>
+          <animateTransform attributeName="transform" type="rotate" from="270 260 260" to="630 260 260" dur="20s" repeatCount="indefinite"/>
+          <circle cx="260" cy="75" r="20" fill="rgba(211,236,84,.1)" stroke="rgba(211,236,84,.4)" stroke-width="1"/>
+          <text x="260" y="72" text-anchor="middle" font-family="DM Mono,monospace" font-size="7.5" fill="#e8f580">VEC</text>
+          <text x="260" y="82" text-anchor="middle" font-family="DM Mono,monospace" font-size="7" fill="rgba(232,245,128,.6)">supply</text>
+        </g>
+
+        <!-- ── Pulsos radiais do escudo (proteção ativa) ── -->
+        <circle cx="260" cy="260" r="65" fill="none" stroke="rgba(211,236,84,.5)" stroke-width="1.5">
+          <animate attributeName="r" values="65;110;65" dur="3s" repeatCount="indefinite"/>
+          <animate attributeName="opacity" values=".5;0;.5" dur="3s" repeatCount="indefinite"/>
+        </circle>
+        <circle cx="260" cy="260" r="65" fill="none" stroke="rgba(211,236,84,.3)" stroke-width="1">
+          <animate attributeName="r" values="65;110;65" dur="3s" begin="1.5s" repeatCount="indefinite"/>
+          <animate attributeName="opacity" values=".3;0;.3" dur="3s" begin="1.5s" repeatCount="indefinite"/>
+        </circle>
+
+        <!-- ── Label inferior ── -->
+        <text x="260" y="490" text-anchor="middle" font-family="DM Mono,monospace" font-size="9" fill="rgba(211,236,84,.4)" letter-spacing="3">ABNORMAL AI // BEHAVIORAL ENGINE</text>
+      </svg>
+    </div>
+  </div>
+</section>
+
+<div class="stats-bar reveal">
+  <div class="stat-cell"><div class="stat-n">3<b>k+</b></div><div class="stat-d">Clientes globais confiantes na Abnormal</div></div>
+  <div class="stat-cell"><div class="stat-n">25<b>%</b></div><div class="stat-d">Das empresas Fortune 500 protegidas</div></div>
+  <div class="stat-cell"><div class="stat-n"><b>#</b>1</div><div class="stat-d">Gartner Magic Quadrant — Email Security 2024</div></div>
+  <div class="stat-cell"><div class="stat-n">400<b>M+</b></div><div class="stat-d">Emails analisados por semana pela plataforma</div></div>
+</div>
+
+<section class="section why-section">
+  <div class="why-grid">
+    <div>
+      <p class="section-label reveal">O problema</p>
+      <h2 class="section-title reveal d1">Por que os ataques de email<br><em>continuam funcionando?</em></h2>
+      <p class="section-sub reveal d2" style="margin-bottom:2.2rem;">Ferramentas baseadas em assinaturas e reputação foram criadas para ameaças do passado. Os ataques modernos são projetados para contorná-las.</p>
+      <div class="why-points reveal d3">
+        <div class="why-point"><div class="wp-icon"><i data-lucide="shield-alert" width="17" height="17"></i></div><div><div class="wp-title">Ataques sem links ou anexos maliciosos</div><div class="wp-desc">BEC e engenharia social sofisticada não carregam payload — passam invisíveis pelos filtros tradicionais.</div></div></div>
+        <div class="why-point"><div class="wp-icon"><i data-lucide="user-x" width="17" height="17"></i></div><div><div class="wp-title">Usuários comprometidos como vetor interno</div><div class="wp-desc">Credenciais legítimas usadas por atacantes fazem o email parecer completamente legítimo.</div></div></div>
+        <div class="why-point"><div class="wp-icon"><i data-lucide="lock-keyhole-open" width="17" height="17"></i></div><div><div class="wp-title">Regras estáticas falham com ataques sofisticados</div><div class="wp-desc">Domínios recém-registrados e textos gerados por IA contornam listas negras com facilidade.</div></div></div>
+        <div class="why-point"><div class="wp-icon"><i data-lucide="trending-down" width="17" height="17"></i></div><div><div class="wp-title">O prejuízo aparece quando já é tarde demais</div><div class="wp-desc">Em média, ataques BEC são descobertos após 30 dias — quando transferências já foram realizadas.</div></div></div>
+      </div>
+    </div>
+    <div class="why-visual reveal-right">
+      <!-- Mini dashboard visual SVG em vez da imagem -->
+      <div style="background:var(--ab-card);border:1px solid var(--ab-border);border-top:2px solid var(--ab-purple);padding:1.5rem;display:flex;flex-direction:column;gap:.6rem;">
+        <div style="display:flex;align-items:center;gap:.6rem;padding-bottom:.8rem;border-bottom:1px solid var(--ab-border);font-family:var(--mono);font-size:.58rem;letter-spacing:2px;color:var(--ab-muted);text-transform:uppercase;">
+          <span style="width:6px;height:6px;border-radius:50%;background:var(--ab-grape);box-shadow:0 0 6px var(--ab-grape);flex-shrink:0;"></span>
+          Abnormal Threat Inbox
+        </div>
+        <!-- Linhas de ameaça -->
+        <div style="display:flex;align-items:center;gap:.8rem;padding:.7rem .6rem;background:rgba(239,68,68,.04);border-left:2px solid #ef4444;">
+          <span style="width:28px;height:28px;border-radius:50%;background:linear-gradient(135deg,#ef4444,#dc2626);display:flex;align-items:center;justify-content:center;font-family:var(--mono);font-size:.6rem;color:#fff;flex-shrink:0;">AX</span>
+          <div style="flex:1;min-width:0;">
+            <div style="font-family:var(--body);font-size:.78rem;font-weight:600;color:var(--ab-white);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">accounts@paypal-secure.net</div>
+            <div style="font-family:var(--mono);font-size:.6rem;color:var(--ab-muted);">Urgent: Verify your account</div>
+          </div>
+          <span style="font-family:var(--mono);font-size:.55rem;color:#ef4444;border:1px solid rgba(239,68,68,.3);padding:.2rem .5rem;white-space:nowrap;">BEC · 98</span>
+        </div>
+        <div style="display:flex;align-items:center;gap:.8rem;padding:.7rem .6rem;background:rgba(239,68,68,.04);border-left:2px solid #ef4444;">
+          <span style="width:28px;height:28px;border-radius:50%;background:linear-gradient(135deg,#b8d43a,#d3ec54);display:flex;align-items:center;justify-content:center;font-family:var(--mono);font-size:.6rem;color:#fff;flex-shrink:0;">FN</span>
+          <div style="flex:1;min-width:0;">
+            <div style="font-family:var(--body);font-size:.78rem;font-weight:600;color:var(--ab-white);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">cfo@acme-corp.finance.cc</div>
+            <div style="font-family:var(--mono);font-size:.6rem;color:var(--ab-muted);">Wire transfer — CONFIDENTIAL</div>
+          </div>
+          <span style="font-family:var(--mono);font-size:.55rem;color:#ef4444;border:1px solid rgba(239,68,68,.3);padding:.2rem .5rem;white-space:nowrap;">BEC · 96</span>
+        </div>
+        <div style="display:flex;align-items:center;gap:.8rem;padding:.7rem .6rem;background:rgba(245,158,11,.03);border-left:2px solid #f59e0b;">
+          <span style="width:28px;height:28px;border-radius:50%;background:linear-gradient(135deg,#f59e0b,#d97706);display:flex;align-items:center;justify-content:center;font-family:var(--mono);font-size:.6rem;color:#fff;flex-shrink:0;">HR</span>
+          <div style="flex:1;min-width:0;">
+            <div style="font-family:var(--body);font-size:.78rem;font-weight:600;color:var(--ab-white);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">hr-team@onboarding-portal.io</div>
+            <div style="font-family:var(--mono);font-size:.6rem;color:var(--ab-muted);">Your credentials for HR system</div>
+          </div>
+          <span style="font-family:var(--mono);font-size:.55rem;color:#f59e0b;border:1px solid rgba(245,158,11,.3);padding:.2rem .5rem;white-space:nowrap;">QR · 74</span>
+        </div>
+        <div style="display:flex;align-items:center;gap:.8rem;padding:.7rem .6rem;background:rgba(34,197,94,.03);border-left:2px solid #22c55e;">
+          <span style="width:28px;height:28px;border-radius:50%;background:linear-gradient(135deg,var(--ab-purple),#4338ca);display:flex;align-items:center;justify-content:center;font-family:var(--mono);font-size:.6rem;color:#fff;flex-shrink:0;">AB</span>
+          <div style="flex:1;min-width:0;">
+            <div style="font-family:var(--body);font-size:.78rem;font-weight:600;color:var(--ab-white);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">alerts@abnormalsecurity.com</div>
+            <div style="font-family:var(--mono);font-size:.6rem;color:var(--ab-muted);">Weekly report — 12 blocked</div>
+          </div>
+          <span style="font-family:var(--mono);font-size:.55rem;color:#22c55e;border:1px solid rgba(34,197,94,.3);padding:.2rem .5rem;white-space:nowrap;">Safe · 2</span>
+        </div>
+        <div style="padding-top:.6rem;border-top:1px solid var(--ab-border);display:flex;align-items:center;gap:.8rem;font-family:var(--mono);font-size:.58rem;color:var(--ab-muted);">
+          <span><b style="color:var(--ab-white);">3</b> bloqueados</span>
+          <span style="width:1px;height:10px;background:var(--ab-border);"></span>
+          <span><b style="color:var(--ab-white);">231</b> analisados</span>
+          <span style="margin-left:auto;display:flex;align-items:center;gap:.3rem;color:var(--ab-grape);">
+            <span style="width:5px;height:5px;border-radius:50%;background:var(--ab-grape);animation:pulse-dot 1.5s ease-in-out infinite;"></span>
+            AI ativo
+          </span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section how-section">
+  <p class="section-label reveal">Como funciona</p>
+  <h2 class="section-title reveal d1">Behavioral AI.<br><em>Proteção que aprende.</em></h2>
+  <p class="section-sub reveal d2">A Abnormal constrói um modelo comportamental de cada pessoa e sistema para identificar desvios — mesmo sem assinaturas, regras ou histórico de ameaças.</p>
+  <div class="how-steps">
+    <div class="how-step reveal d1"><div class="hs-num">01 — Aprendizado</div><div class="hs-icon"><i data-lucide="brain" width="20" height="20"></i></div><div class="hs-title">Baseline Comportamental</div><div class="hs-body">Modela comunicações reais: horários, dispositivos, vocabulário, parceiros e fluxos de email de cada usuário da organização.</div></div>
+    <div class="how-step reveal d2"><div class="hs-num">02 — Detecção</div><div class="hs-icon"><i data-lucide="scan-eye" width="20" height="20"></i></div><div class="hs-title">Análise em Tempo Real</div><div class="hs-body">Cada email é comparado ao baseline. Desvios sutis de tom, remetente ou contexto são sinalizados instantaneamente.</div></div>
+    <div class="how-step reveal d3"><div class="hs-num">03 — Remediação</div><div class="hs-icon"><i data-lucide="shield-check" width="20" height="20"></i></div><div class="hs-title">Ação Autônoma</div><div class="hs-body">Ameaças são bloqueadas ou colocadas em quarentena automaticamente, sem intervenção humana ou regras manuais.</div></div>
+  </div>
+</section>
+
+<section class="demo-section">
+  <div class="demo-inner">
+    <!-- Esquerda: chamada para a demo -->
+    <div class="demo-left reveal">
+      <div class="demo-eyebrow">Guided Product Tours</div>
+      <h2 class="demo-title">Veja a Abnormal<br>em ação — <em>agora</em></h2>
+      <p class="demo-sub">
+        Explore a plataforma Abnormal sem precisar agendar nada. Os tours interativos mostram detecções reais, dashboards e o motor de IA em funcionamento — em menos de 5 minutos.
+      </p>
+      <a href="https://abnormal.ai/tours" target="_blank" rel="noopener noreferrer" class="demo-cta-main">
+        <i data-lucide="play-circle" width="20" height="20"></i>
+        Acessar Tours Interativos
+        <i data-lucide="arrow-right" width="16" height="16"></i>
+      </a>
+      <div class="demo-cta-note">
+        <i data-lucide="globe" width="11" height="11"></i>
+        abnormal.ai/tours — acesso gratuito, sem cadastro
+      </div>
+    </div>
+
+    <!-- Direita: lista de tours -->
+    <div class="demo-tours reveal-right d1">
+      <div class="tours-label">Tours disponíveis</div>
+      <div class="tours-grid">
+
+        <a href="https://abnormal.ai/tours" target="_blank" rel="noopener noreferrer" class="tour-card">
+          <div class="tour-icon"><i data-lucide="compass" width="16" height="16"></i></div>
+          <div class="tour-body">
+            <div class="tour-title">Introduction to Abnormal</div>
+            <div class="tour-desc">Visão geral da plataforma e como a IA comportamental funciona na prática.</div>
+            <span class="tour-tag tag-overview">Visão geral</span>
+          </div>
+          <i data-lucide="arrow-right" width="14" height="14" class="tour-arrow"></i>
+        </a>
+
+        <a href="https://abnormal.ai/tours#attack-types" target="_blank" rel="noopener noreferrer" class="tour-card">
+          <div class="tour-icon"><i data-lucide="shield-alert" width="16" height="16"></i></div>
+          <div class="tour-body">
+            <div class="tour-title">Business Email Compromise</div>
+            <div class="tour-desc">Como a Abnormal detecta BEC analisando identidade, comportamento e conteúdo.</div>
+            <span class="tour-tag tag-attack">Tipo de ataque</span>
+          </div>
+          <i data-lucide="arrow-right" width="14" height="14" class="tour-arrow"></i>
+        </a>
+
+        <a href="https://abnormal.ai/tours#attack-types" target="_blank" rel="noopener noreferrer" class="tour-card">
+          <div class="tour-icon"><i data-lucide="user-round-x" width="16" height="16"></i></div>
+          <div class="tour-body">
+            <div class="tour-title">ATO: MFA Bypass Detection</div>
+            <div class="tour-desc">Detecção de sequestro de conta mesmo após bypass de autenticação multifator.</div>
+            <span class="tour-tag tag-attack">Tipo de ataque</span>
+          </div>
+          <i data-lucide="arrow-right" width="14" height="14" class="tour-arrow"></i>
+        </a>
+
+        <a href="https://abnormal.ai/tours#attack-types" target="_blank" rel="noopener noreferrer" class="tour-card">
+          <div class="tour-icon"><i data-lucide="git-branch-plus" width="16" height="16"></i></div>
+          <div class="tour-body">
+            <div class="tour-title">Vendor Email Compromise</div>
+            <div class="tour-desc">Como a plataforma aprende o comportamento de fornecedores para detectar fraudes.</div>
+            <span class="tour-tag tag-attack">Tipo de ataque</span>
+          </div>
+          <i data-lucide="arrow-right" width="14" height="14" class="tour-arrow"></i>
+        </a>
+
+        <a href="https://abnormal.ai/tours#attack-types" target="_blank" rel="noopener noreferrer" class="tour-card">
+          <div class="tour-icon"><i data-lucide="qr-code" width="16" height="16"></i></div>
+          <div class="tour-body">
+            <div class="tour-title">QR Code Phishing</div>
+            <div class="tour-desc">Detecção combinada de IA comportamental + scanner de QR code para phishing avançado.</div>
+            <span class="tour-tag tag-attack">Tipo de ataque</span>
+          </div>
+          <i data-lucide="arrow-right" width="14" height="14" class="tour-arrow"></i>
+        </a>
+
+        <a href="https://abnormal.ai/tours#products" target="_blank" rel="noopener noreferrer" class="tour-card">
+          <div class="tour-icon"><i data-lucide="bot" width="16" height="16"></i></div>
+          <div class="tour-body">
+            <div class="tour-title">AI Security Mailbox</div>
+            <div class="tour-desc">Automatização do fluxo de emails reportados por usuários com respostas geradas por IA.</div>
+            <span class="tour-tag tag-product">Produto</span>
+          </div>
+          <i data-lucide="arrow-right" width="14" height="14" class="tour-arrow"></i>
+        </a>
+
+      </div>
+      <a href="https://abnormal.ai/tours" target="_blank" rel="noopener noreferrer" class="tours-all">
+        <i data-lucide="layers" width="12" height="12"></i>
+        Ver todos os tours disponíveis
+        <i data-lucide="external-link" width="11" height="11"></i>
+      </a>
+    </div>
+  </div>
+</section>
+
+<section class="section caps-section">
+  <div class="caps-intro reveal">
+    <p class="section-label">Plataforma</p>
+    <h2 class="section-title">O que a Abnormal<br><em>protege</em></h2>
+    <p class="section-sub">Cobertura completa para os vetores de ataque mais críticos no canal de email corporativo.</p>
+  </div>
+  <div class="caps-grid">
+    <div class="cap reveal d1"><div class="cap-icon"><i data-lucide="mail-x" width="17" height="17"></i></div><div class="cap-title">Email Security</div><div class="cap-body">Phishing, spear phishing, BEC e ransomware por email — bloqueados mesmo sem links ou anexos maliciosos.</div></div>
+    <div class="cap reveal d2"><div class="cap-icon"><i data-lucide="user-cog" width="17" height="17"></i></div><div class="cap-title">Account Takeover</div><div class="cap-body">Logins anômalos e uso de credenciais comprometidas detectados em Microsoft 365 e Google Workspace.</div></div>
+    <div class="cap reveal d3"><div class="cap-icon"><i data-lucide="git-branch-plus" width="17" height="17"></i></div><div class="cap-title">Supply Chain</div><div class="cap-body">Monitoramento de fornecedores e parceiros para detectar comprometimentos externos que visam sua organização.</div></div>
+    <div class="cap reveal d1"><div class="cap-icon"><i data-lucide="webhook" width="17" height="17"></i></div><div class="cap-title">Graymail</div><div class="cap-body">Categorização inteligente de emails indesejados não maliciosos, reduzindo ruído e aumentando o foco em ameaças reais.</div></div>
+    <div class="cap reveal d2"><div class="cap-icon"><i data-lucide="layout-dashboard" width="17" height="17"></i></div><div class="cap-title">Security Posture</div><div class="cap-body">Dashboards executivos com métricas de exposição, evolução de risco e relatórios de conformidade automatizados.</div></div>
+    <div class="cap reveal d3"><div class="cap-icon"><i data-lucide="plug-zap" width="17" height="17"></i></div><div class="cap-title">Integração API-first</div><div class="cap-body">Deploy sem alteração de MX record. Conecta com M365 e Google Workspace via API em menos de 30 minutos.</div></div>
+  </div>
+</section>
+
+<div class="recognition-bar reveal">
+  <div class="rec-inner">
+    <div class="rec-badge"><i data-lucide="award" width="17" height="17"></i><div class="rec-badge-label">Gartner® MQ™ 2024</div></div>
+    <p class="rec-desc">A Abnormal foi reconhecida como <strong>Líder no Gartner® Magic Quadrant™ para Plataformas de Segurança de Email</strong> — única com arquitetura 100% baseada em IA comportamental.</p>
+  </div>
+  <a href="https://abnormalsecurity.com/resources/gartner-magic-quadrant-email-security-platforms" target="_blank" rel="noopener noreferrer" class="btn-ab btn-ab-ghost" style="white-space:nowrap;flex-shrink:0;text-decoration:none;cursor:none;"><i data-lucide="file-text" width="14" height="14"></i>Ver relatório</a>
+</div>
+
+<section class="section partner-section">
+  <div class="partner-split">
+    <div>
+      <p class="section-label reveal">Parceria</p>
+      <h2 class="section-title reveal d1">CyTracks <em>×</em><br>Abnormal AI</h2>
+      <p class="section-sub reveal d2">Como parceiros oficiais no Brasil, implementamos, configuramos e suportamos a plataforma Abnormal no seu ambiente — com atendimento em português e SLA definido.</p>
+      <div class="partner-benefits reveal d3">
+        <div class="pb-item"><i data-lucide="wrench" width="15" height="15" class="pb-icon"></i><div><div class="pb-title">Implantação gerenciada</div><div class="pb-desc">Configuramos a Abnormal no seu tenant M365 ou Google Workspace sem impacto na entrega de emails.</div></div></div>
+        <div class="pb-item"><i data-lucide="sliders-horizontal" width="15" height="15" class="pb-icon"></i><div><div class="pb-title">Tuning e otimização contínua</div><div class="pb-desc">Ajuste fino das políticas para reduzir falsos positivos e adaptar ao contexto do seu negócio.</div></div></div>
+        <div class="pb-item"><i data-lucide="headphones" width="15" height="15" class="pb-icon"></i><div><div class="pb-title">Suporte local em português</div><div class="pb-desc">Acesso direto à nossa equipe técnica com SLA definido — sem intermediários, sem fila global.</div></div></div>
+        <div class="pb-item"><i data-lucide="bar-chart-2" width="15" height="15" class="pb-icon"></i><div><div class="pb-title">Revisão de postura mensal</div><div class="pb-desc">Relatórios de ameaças, evolução de maturidade e recomendações de hardening entregues mensalmente.</div></div></div>
+      </div>
+    </div>
+    <div class="reveal-right d2">
+      <div class="status-panel">
+        <div class="sp-header">
+          <span class="sp-title-label">Abnormal Platform — Status</span>
+          <span class="sp-live"><span class="sp-dot"></span>Live</span>
+        </div>
+        <div class="sp-rows">
+          <div class="sp-row"><i data-lucide="check-circle" width="14" height="14" class="sp-icon-ok"></i><span class="sp-label">Integração Microsoft 365</span><span class="sp-value">Conectado</span></div>
+          <div class="sp-row"><i data-lucide="brain" width="14" height="14" class="sp-icon-ok"></i><span class="sp-label">AI Behavioral Engine</span><span class="sp-value">Ativo</span></div>
+          <div class="sp-row"><i data-lucide="shield" width="14" height="14" class="sp-icon-ok"></i><span class="sp-label">Auto-remediation</span><span class="sp-value">Habilitado</span></div>
+          <div class="sp-row"><i data-lucide="mail-x" width="14" height="14" class="sp-icon-block"></i><span class="sp-label">Ameaças bloqueadas hoje</span><span class="sp-value sp-v-block">14 ataques</span></div>
+          <div class="sp-row"><i data-lucide="alert-triangle" width="14" height="14" class="sp-icon-warn"></i><span class="sp-label">Em quarentena</span><span class="sp-value sp-v-warn">3 emails</span></div>
+          <div class="sp-row"><i data-lucide="check" width="14" height="14" class="sp-icon-ok"></i><span class="sp-label">Falsos positivos</span><span class="sp-value sp-v-ok">0</span></div>
+          <div class="sp-row"><i data-lucide="clock" width="14" height="14" class="sp-icon-ok"></i><span class="sp-label">Última revisão CyTracks</span><span class="sp-value">Hoje, 09:41</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="cta-section reveal">
+  <p class="cta-eyebrow">Próximo passo</p>
+  <h2 class="cta-title">Veja a Abnormal<br>em ação no<br><em>seu ambiente</em></h2>
+  <p class="cta-sub">Uma conversa de 20 minutos com nossos especialistas é suficiente para mostrar ameaças que sua ferramenta atual está deixando passar.</p>
+  <div class="cta-btns">
+    <a href="contato.html" class="btn-ab btn-ab-solid"><i data-lucide="calendar" width="15" height="15"></i>Agendar Conversa Técnica</a>
+    <a href="https://abnormalsecurity.com" target="_blank" rel="noopener noreferrer" class="btn-ab btn-ab-ghost"><i data-lucide="external-link" width="14" height="14"></i>Site Oficial Abnormal</a>
+  </div>
+</section>
+
+<footer>
+  <div class="footer-ticker" aria-hidden="true"><span class="ticker-inner" id="tickerInner"></span></div>
+  <div class="footer-main">
+    <div><p class="footer-copy">&copy; 2026 CyTracks Soluções Cibernéticas.<br>Todos os direitos reservados.</p></div>
+    <div class="footer-center"><div class="footer-slash">CY//</div><span class="footer-tagline">Parceiro Oficial Abnormal AI — Brasil</span></div>
+    <ul class="footer-links-list">
+      <li><a href="privacidade.html">Privacidade</a></li>
+      <li><a href="contato.html">Contato</a></li>
+      <li><a href="https://www.linkedin.com/company/cytracks" target="_blank" rel="noopener noreferrer"><i data-lucide="linkedin" width="14" height="14"></i>LinkedIn</a></li>
+    </ul>
+  </div>
+</footer>
+
+<script>
+lucide.createIcons();
+const cursorDot=document.getElementById("cursorDot"),cursorRing=document.getElementById("cursorRing");
+let mx=0,my=0,rx=0,ry=0;
+document.addEventListener("mousemove",e=>{mx=e.clientX;my=e.clientY;});
+document.querySelectorAll("a,button,.cap,.how-step,.stat-cell,.why-point,.pb-item,.sp-row,.has-drop").forEach(el=>{el.addEventListener("mouseenter",()=>document.body.classList.add("cursor-hover"));el.addEventListener("mouseleave",()=>document.body.classList.remove("cursor-hover"));});
+(function aC(){rx+=(mx-rx)*.12;ry+=(my-ry)*.12;cursorDot.style.cssText=`left:${mx}px;top:${my}px`;cursorRing.style.cssText=`left:${rx}px;top:${ry}px`;requestAnimationFrame(aC);})();
+const canvas=document.getElementById("bg-canvas"),ctx=canvas.getContext("2d");
+let W,H,pts=[];
+function resize(){W=canvas.width=window.innerWidth;H=canvas.height=window.innerHeight;}
+resize();window.addEventListener("resize",resize);
+const COLS=[[211,236,84],[211,236,84],[211,236,84],[186,212,48]];
+class P{constructor(){this.reset();}reset(){this.x=Math.random()*W;this.y=Math.random()*H;this.vx=(Math.random()-.5)*.2;this.vy=(Math.random()-.5)*.2;this.r=Math.random()*.9+.2;this.a=Math.random()*.2+.03;this.life=0;this.max=Math.random()*500+200;this.c=COLS[Math.floor(Math.random()*COLS.length)];}update(){this.x+=this.vx;this.y+=this.vy;this.life++;if(this.life>this.max||this.x<0||this.x>W||this.y<0||this.y>H)this.reset();}draw(){const f=Math.min(this.life/80,1)*Math.min((this.max-this.life)/80,1);ctx.beginPath();ctx.arc(this.x,this.y,this.r,0,Math.PI*2);ctx.fillStyle=`rgba(${this.c[0]},${this.c[1]},${this.c[2]},${this.a*f})`;ctx.fill();}}
+function lines(){for(let i=0;i<pts.length;i++)for(let j=i+1;j<pts.length;j++){const dx=pts[i].x-pts[j].x,dy=pts[i].y-pts[j].y,d=Math.sqrt(dx*dx+dy*dy);if(d<100){ctx.beginPath();ctx.moveTo(pts[i].x,pts[i].y);ctx.lineTo(pts[j].x,pts[j].y);ctx.strokeStyle=`rgba(211,236,84,${.04*(1-d/100)})`;ctx.lineWidth=.5;ctx.stroke();}}}
+for(let i=0;i<70;i++)pts.push(new P());
+(function anim(){ctx.clearRect(0,0,W,H);lines();pts.forEach(p=>{p.update();p.draw();});requestAnimationFrame(anim);})();
+const logo=document.getElementById("mainLogo");
+function glitch(){const f=["clip-path:inset(30% 0 50% 0);transform:translateX(-3px)","clip-path:inset(60% 0 20% 0);transform:translateX(3px)","clip-path:inset(10% 0 70% 0);transform:translateX(-2px)","clip-path:none;transform:none"];let i=0;const iv=setInterval(()=>{logo.style.cssText=f[i++];if(i>=f.length){clearInterval(iv);logo.style.cssText="";}},60);}
+setTimeout(glitch,400);
+const CHARS="ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789#$%@!";
+function scramble(el){const orig=el.dataset.orig||el.textContent.trim();el.dataset.orig=orig;let i=0;const tot=orig.length*2.5;clearInterval(el._iv);el._iv=setInterval(()=>{el.textContent=orig.split("").map((c,idx)=>{if(c===" ")return " ";if(idx<i/2.5)return c;return CHARS[Math.floor(Math.random()*CHARS.length)];}).join("");i++;if(i>=tot){clearInterval(el._iv);el.textContent=orig;}},28);}
+function restore(el){clearInterval(el._iv);el.textContent=el.dataset.orig||el.textContent;}
+document.querySelectorAll(".nav-link span,.drop-item").forEach(el=>{el.dataset.orig=el.textContent.trim();el.addEventListener("mouseenter",()=>scramble(el));el.addEventListener("mouseleave",()=>restore(el));});
+document.querySelectorAll(".drop-label").forEach(dl=>{const tn=[...dl.childNodes].find(n=>n.nodeType===3&&n.textContent.trim());if(!tn)return;const s=document.createElement("span");s.textContent=tn.textContent.trim();s.dataset.orig=s.textContent;tn.replaceWith(s);dl.addEventListener("mouseenter",()=>scramble(s));dl.addEventListener("mouseleave",()=>restore(s));});
+const io=new IntersectionObserver(entries=>{entries.forEach(({isIntersecting,target})=>{if(!isIntersecting)return;target.classList.add("active");io.unobserve(target);});},{threshold:.07});
+document.querySelectorAll(".reveal,.reveal-right").forEach(el=>io.observe(el));
+const segs=["CyTracks × Abnormal AI","Parceiro Oficial no Brasil","Behavioral AI Email Security","Block BEC • Phishing • Account Takeover","3.000+ Clientes Globais","Gartner Magic Quadrant Leader 2024","Protect Humans with AI","Zero Link Zero Payload Zero Excuses","Supply Chain Protection","API-first — Deploy em minutos"];
+const tickerEl=document.getElementById("tickerInner");
+const txt=segs.map(s=>"   //   "+s).join("");
+tickerEl.textContent=txt+txt;
+</script>
+</body>
+</html>
